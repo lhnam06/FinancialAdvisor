@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Card } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
@@ -23,10 +23,11 @@ import {
   TrendingUp,
 } from "lucide-react";
 import { toast } from "sonner";
-import { useNavigate } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 
 export function Transactions() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [transactions, setTransactions] = useState<Transaction[]>(mockTransactions);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
@@ -104,6 +105,20 @@ export function Transactions() {
     });
     setEditingTransaction(null);
   };
+
+  useEffect(() => {
+    if (searchParams.get("add") !== "1") return;
+    setEditingTransaction(null);
+    setFormData({
+      type: "expense",
+      amount: "",
+      category: "",
+      description: "",
+      date: new Date().toISOString().split("T")[0],
+    });
+    setIsDialogOpen(true);
+    navigate("/transactions", { replace: true });
+  }, [searchParams, navigate]);
 
   const filteredTransactions = transactions.filter(t => {
     const matchesSearch = t.description.toLowerCase().includes(searchQuery.toLowerCase()) ||

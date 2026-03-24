@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useNavigate, useSearchParams } from "react-router";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router";
 import { Card } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
@@ -7,15 +7,30 @@ import { Label } from "../components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
 import { categories } from "../lib/mockData";
-import { ChevronLeft, Camera, Mic, Upload, Check, Edit, AlertCircle } from "lucide-react";
+import {
+  ChevronLeft,
+  Camera,
+  Mic,
+  Upload,
+  Check,
+  Edit,
+  AlertCircle,
+  PenLine,
+} from "lucide-react";
 import { toast } from "sonner";
 
 export function SmartInput() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const initialMode = searchParams.get("mode") || "voice";
-  
-  const [activeTab, setActiveTab] = useState(initialMode);
+  const initialMode = searchParams.get("mode") === "scan" ? "scan" : "voice";
+
+  const [activeTab, setActiveTab] = useState<"voice" | "scan">(initialMode);
+
+  useEffect(() => {
+    const mode = searchParams.get("mode");
+    if (mode === "scan") setActiveTab("scan");
+    else if (mode === "voice") setActiveTab("voice");
+  }, [searchParams]);
   const [isRecording, setIsRecording] = useState(false);
   const [voiceTranscript, setVoiceTranscript] = useState("");
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
@@ -147,7 +162,29 @@ export function SmartInput() {
 
       {/* Input Methods */}
       <div className="px-4 mt-6">
-        <Tabs value={activeTab} onValueChange={setActiveTab}>
+        <Card className="mb-6 overflow-hidden bg-slate-900 border-slate-800 border-cyan-500/20">
+          <div className="p-4">
+            <p className="text-[11px] uppercase tracking-wide text-cyan-400/90 font-medium mb-1">
+              Bước 1 · Nhanh nhất
+            </p>
+            <p className="text-sm text-slate-300 mb-4">
+              Thêm giao dịch bằng form đầy đủ (số tiền, danh mục, ngày). Phù hợp khi bạn muốn nhập chính xác.
+            </p>
+            <Button asChild size="lg" className="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-semibold">
+              <Link to="/transactions?add=1" className="flex items-center justify-center gap-2">
+                <PenLine className="w-5 h-5" />
+                Thêm giao dịch thủ công
+              </Link>
+            </Button>
+          </div>
+          <div className="px-4 pb-4 pt-0">
+            <p className="text-xs text-slate-500 text-center">
+              Hoặc chọn <span className="text-slate-400">giọng nói / OCR</span> bên dưới để app gợi ý sẵn, rồi kiểm tra trước khi lưu.
+            </p>
+          </div>
+        </Card>
+
+        <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as "voice" | "scan")}>
           <TabsList className="grid w-full grid-cols-2 bg-slate-900 border border-slate-800">
             <TabsTrigger value="voice">
               <Mic className="w-4 h-4 mr-2" />
@@ -161,6 +198,7 @@ export function SmartInput() {
 
           {/* Voice Input */}
           <TabsContent value="voice" className="space-y-6">
+            <p className="text-xs text-slate-500 -mt-2 mb-1">Bước 2 · Ghi âm, kiểm tra, lưu</p>
             <Card className="p-6 bg-slate-900 border-slate-800">
               <div className="text-center space-y-4">
                 <div className={`w-24 h-24 mx-auto rounded-full flex items-center justify-center transition-all ${
@@ -208,6 +246,7 @@ export function SmartInput() {
 
           {/* OCR Scan */}
           <TabsContent value="scan" className="space-y-6">
+            <p className="text-xs text-slate-500 -mt-2 mb-1">Bước 2 · Ảnh hóa đơn, chỉnh sửa, lưu</p>
             <Card className="p-6 bg-slate-900 border-slate-800">
               {!uploadedImage ? (
                 <div className="text-center space-y-4">
