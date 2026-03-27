@@ -35,7 +35,7 @@ export function BottomNav({ currentPath }: BottomNavProps) {
               }`}
             >
               <Icon className="w-5 h-5 mb-1" strokeWidth={isActive ? 2.5 : 2} />
-              <span className="text-xs">{item.label}</span>
+              <span className="text-sm">{item.label}</span>
             </Link>
           );
         })}
@@ -62,7 +62,7 @@ export function BottomNav({ currentPath }: BottomNavProps) {
               }`}
             >
               <Icon className="w-5 h-5 mb-1" strokeWidth={isActive ? 2.5 : 2} />
-              <span className="text-xs">{item.label}</span>
+              <span className="text-sm">{item.label}</span>
             </Link>
           );
         })}

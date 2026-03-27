@@ -157,7 +157,7 @@ export function Dashboard() {
             Flowlystic
           </h1>
           <p className="mt-2 text-sm text-slate-300 leading-snug">
-            Theo doi dong tien thong minh moi ngay
+            Theo dõi dòng tiền thông minh mỗi ngày
           </p>
         </div>
 
@@ -168,14 +168,14 @@ export function Dashboard() {
             <div>
               <div className="flex items-center gap-2 mb-1">
                 <TrendingUp className="w-4 h-4 text-emerald-400" />
-                <span className="text-xs text-slate-300">Thu nhập</span>
+                <span className="text-sm text-slate-300">Thu nhập</span>
               </div>
               <p className="text-lg text-emerald-300">{formatCurrency(totalIncome)}</p>
             </div>
             <div>
               <div className="flex items-center gap-2 mb-1">
                 <TrendingDown className="w-4 h-4 text-rose-400" />
-                <span className="text-xs text-slate-300">Chi tiêu</span>
+                <span className="text-sm text-slate-300">Chi tiêu</span>
               </div>
               <p className="text-lg text-rose-300">{formatCurrency(totalExpense)}</p>
             </div>
@@ -190,13 +190,13 @@ export function Dashboard() {
             <Link to="/smart-input?mode=voice">
               <Button variant="outline" className="w-full h-20 flex-col gap-2 border-slate-700 bg-slate-950 hover:bg-slate-800 text-slate-100">
                 <Mic className="w-6 h-6 text-cyan-300" />
-                <span className="text-xs">Giọng nói</span>
+                <span className="text-sm">Giọng nói</span>
               </Button>
             </Link>
             <Link to="/smart-input?mode=scan">
               <Button variant="outline" className="w-full h-20 flex-col gap-2 border-slate-700 bg-slate-950 hover:bg-slate-800 text-slate-100">
                 <Camera className="w-6 h-6 text-violet-300" />
-                <span className="text-xs">Quét hóa đơn</span>
+                <span className="text-sm">Quét hóa đơn</span>
               </Button>
             </Link>
           </div>
@@ -251,7 +251,7 @@ export function Dashboard() {
                   key={day}
                   type="button"
                   onClick={() => setSelectedDay(day)}
-                  className={`h-10 rounded-md text-xs font-medium transition-all ${getDayIntensity(day)} ${isSelected ? "ring-2 ring-cyan-300 ring-offset-2 ring-offset-slate-900" : ""}`}
+                  className={`h-10 rounded-md text-sm font-medium transition-all ${getDayIntensity(day)} ${isSelected ? "ring-2 ring-cyan-300 ring-offset-2 ring-offset-slate-900" : ""}`}
                 >
                   {day}
                 </button>
@@ -266,7 +266,7 @@ export function Dashboard() {
             </div>
             <div className="rounded-lg border border-slate-800 bg-slate-950 p-3">
               <p className="text-xs text-slate-400">Ngày có giao dịch</p>
-              <p className="text-sm text-cyan-200 mt-1">{activeExpenseDays} ngay</p>
+              <p className="text-sm text-cyan-200 mt-1">{activeExpenseDays} ngày</p>
             </div>
           </div>
 
@@ -278,7 +278,7 @@ export function Dashboard() {
             {selectedDateTransactions.length > 0 ? (
               <div className="space-y-2">
                 {selectedDateTransactions.slice(0, 3).map((item) => (
-                  <div key={item.id} className="flex items-center justify-between text-xs">
+                  <div key={item.id} className="flex items-center justify-between text-sm">
                     <span className="text-slate-300">{item.description}</span>
                     <span className="text-rose-300">{formatCurrency(item.amount)}</span>
                   </div>
@@ -293,7 +293,7 @@ export function Dashboard() {
 
       <div className="px-4 mt-6">
         <div className="flex items-center justify-between mb-3">
-          <h2 className="text-lg text-slate-100">Ngân sách tháng này</h2>
+          <h2 className="text-xl font-semibold text-slate-100">Ngân sách tháng này</h2>
           <Link to="/budget" className="text-cyan-300 text-sm flex items-center gap-1">
             Xem tất cả <ArrowRight className="w-4 h-4" />
           </Link>
@@ -311,14 +311,14 @@ export function Dashboard() {
               style={{ width: `${Math.min(budgetPercentage, 100)}%` }}
             />
           </div>
-          <p className="text-xs text-slate-400 mb-3">{budgetStatusText}</p>
+          <p className="text-sm text-slate-400 mb-3">{budgetStatusText}</p>
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs text-slate-400">Đã chi</p>
+              <p className="text-sm text-slate-400">Đã chi</p>
               <p className="text-sm text-slate-100">{formatCurrency(totalSpent)}</p>
             </div>
             <div className="text-right">
-              <p className="text-xs text-slate-400">Tổng ngân sách</p>
+              <p className="text-sm text-slate-400">Tổng ngân sách</p>
               <p className="text-sm text-slate-100">{formatCurrency(totalBudget)}</p>
             </div>
           </div>
@@ -340,7 +340,7 @@ export function Dashboard() {
                 <div className="flex items-start justify-between mb-3">
                   <div>
                     <h3 className="text-sm mb-1 text-slate-100">{goal.name}</h3>
-                    <p className="text-xs text-slate-400">
+                    <p className="text-sm text-slate-400">
                       {formatCurrency(goal.currentAmount)} / {formatCurrency(goal.targetAmount)}
                     </p>
                   </div>
@@ -376,7 +376,7 @@ export function Dashboard() {
                 </div>
                 <div>
                   <p className="text-sm text-slate-100">{transaction.description}</p>
-                  <p className="text-xs text-slate-400">{transaction.category}</p>
+                  <p className="text-sm text-slate-400">{transaction.category}</p>
                 </div>
               </div>
               <p className={`text-sm ${
