@@ -134,18 +134,18 @@ export function Budget() {
           >
             <ChevronLeft className="w-6 h-6" />
           </Button>
-          <h1 className="text-2xl">Ngân sách</h1>
+          <h1 className="text-2xl font-semibold">Ngân sách</h1>
         </div>
 
         {/* Overall Budget */}
         <Card className="bg-slate-900/70 backdrop-blur-sm border-slate-700 p-5">
-          <p className="text-sm text-slate-300 mb-1">Tổng ngân sách tháng này</p>
+          <p className="text-base text-slate-200 mb-1">Tổng ngân sách tháng này</p>
           <div className="flex items-baseline gap-2 mb-4">
             <p className="text-2xl text-cyan-300">{formatCurrency(totalSpent)}</p>
-            <p className="text-sm text-slate-300">/ {formatCurrency(totalBudget)}</p>
+            <p className="text-base text-slate-300">/ {formatCurrency(totalBudget)}</p>
           </div>
           <Progress value={overallPercentage} className="h-3 bg-slate-800 [&>div]:bg-cyan-400" />
-          <p className="text-xs text-slate-300 mt-2">
+          <p className="text-sm text-slate-300 mt-3">
             Còn lại: {formatCurrency(totalBudget - totalSpent)}
           </p>
         </Card>
@@ -154,7 +154,7 @@ export function Budget() {
       {/* Budget Categories */}
       <div className="px-4 mt-6 space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg text-slate-100">Danh mục ngân sách</h2>
+          <h2 className="text-xl font-semibold text-slate-100">Danh mục ngân sách</h2>
           <Button
             variant="outline"
             size="sm"
@@ -172,15 +172,15 @@ export function Budget() {
           const isWarning = percentage > 80 && !isOverBudget;
           
           return (
-            <Card key={budget.id} className="p-4 bg-slate-900 border-slate-800">
-              <div className="flex items-center justify-between mb-3">
+            <Card key={budget.id} className="p-5 bg-slate-900 border-slate-800">
+              <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center">
                     {getCategoryIcon(budget.category)}
                   </div>
                   <div>
-                    <p className="text-sm text-slate-100">{budget.category}</p>
-                    <p className="text-xs text-slate-400">
+                    <p className="text-base font-semibold text-slate-100">{budget.category}</p>
+                    <p className="text-sm text-slate-300 mt-0.5">
                       {formatCurrency(budget.spent)} / {formatCurrency(budget.limit)}
                     </p>
                   </div>
@@ -211,13 +211,13 @@ export function Budget() {
                       : "[&>div]:bg-emerald-500"
                   }`}
                 />
-                <div className="flex items-center justify-between text-xs">
+                <div className="flex items-center justify-between text-sm">
                   <span className={
-                    isOverBudget ? "text-rose-400" : isWarning ? "text-amber-400" : "text-slate-400"
+                    isOverBudget ? "text-rose-400" : isWarning ? "text-amber-400" : "text-slate-300"
                   }>
                     {percentage.toFixed(0)}% đã sử dụng
                   </span>
-                  <span className="text-slate-400">
+                  <span className="text-slate-300">
                     Còn lại: {formatCurrency(Math.max(budget.limit - budget.spent, 0))}
                   </span>
                 </div>
@@ -225,7 +225,7 @@ export function Budget() {
 
               {isOverBudget && (
                 <div className="mt-3 p-2 bg-rose-900/20 border border-rose-700/30 rounded-lg">
-                  <p className="text-xs text-rose-300">
+                  <p className="text-sm text-rose-200">
                     ⚠️ Đã vượt ngân sách {formatCurrency(budget.spent - budget.limit)}
                   </p>
                 </div>
@@ -245,8 +245,8 @@ export function Budget() {
       {/* Tips */}
       <div className="px-4 mt-6">
         <Card className="p-4 bg-slate-900 border-slate-800">
-          <h3 className="text-sm mb-2 text-cyan-300">💡 Mẹo quản lý ngân sách</h3>
-          <ul className="text-xs text-slate-300 space-y-1">
+          <h3 className="text-base font-semibold mb-2 text-cyan-300">💡 Mẹo quản lý ngân sách</h3>
+          <ul className="text-sm text-slate-200 space-y-2">
             <li>• Áp dụng quy tắc 50/30/20: 50% nhu cầu, 30% mong muốn, 20% tiết kiệm</li>
             <li>• Theo dõi chi tiêu hàng ngày để kiểm soát ngân sách</li>
             <li>• Đặt cảnh báo khi đạt 80% ngân sách</li>
