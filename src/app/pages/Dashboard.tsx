@@ -156,7 +156,9 @@ export function Dashboard() {
           <h1 className="mt-2 font-signature text-4xl font-extrabold tracking-wide leading-none drop-shadow-[0_6px_18px_rgba(0,0,0,0.35)]">
             Flowlystic
           </h1>
-          <p className="text-xs text-slate-400 mt-1">Theo doi dong tien thong minh moi ngay</p>
+          <p className="mt-2 text-sm text-slate-300 leading-snug">
+            Theo doi dong tien thong minh moi ngay
+          </p>
         </div>
 
         <Card className="bg-slate-900/70 backdrop-blur-sm border-slate-700 p-5 shadow-lg">
@@ -229,7 +231,7 @@ export function Dashboard() {
             </Button>
           </div>
 
-          <div className="grid grid-cols-7 text-[10px] text-slate-500 mb-2">
+          <div className="grid grid-cols-7 text-xs text-slate-400 mb-2">
             {["CN", "T2", "T3", "T4", "T5", "T6", "T7"].map((day) => (
               <div key={day} className="text-center py-1">
                 {day}
@@ -259,18 +261,18 @@ export function Dashboard() {
 
           <div className="grid grid-cols-2 gap-3 mt-4">
             <div className="rounded-lg border border-slate-800 bg-slate-950 p-3">
-              <p className="text-[11px] text-slate-400">Tong chi thang</p>
+              <p className="text-xs text-slate-400">Tổng chi tháng</p>
               <p className="text-sm text-rose-300 mt-1">{formatCurrency(monthlyExpense)}</p>
             </div>
             <div className="rounded-lg border border-slate-800 bg-slate-950 p-3">
-              <p className="text-[11px] text-slate-400">Ngay co giao dich</p>
+              <p className="text-xs text-slate-400">Ngày có giao dịch</p>
               <p className="text-sm text-cyan-200 mt-1">{activeExpenseDays} ngay</p>
             </div>
           </div>
 
           <div className="mt-4 rounded-lg border border-slate-800 bg-slate-950 p-3">
             <div className="flex items-center justify-between mb-2">
-              <p className="text-xs text-slate-400">Chi tiet ngay {selectedDay}</p>
+              <p className="text-sm text-slate-300">Chi tiết ngày {selectedDay}</p>
               <p className="text-sm text-rose-300">{formatCurrency(selectedDateExpense)}</p>
             </div>
             {selectedDateTransactions.length > 0 ? (
@@ -283,7 +285,7 @@ export function Dashboard() {
                 ))}
               </div>
             ) : (
-              <p className="text-xs text-slate-500">Khong co chi tieu trong ngay nay</p>
+              <p className="text-sm text-slate-500">Không có chi tiêu trong ngày này</p>
             )}
           </div>
         </Card>
@@ -405,14 +407,18 @@ export function Dashboard() {
         </div>
       </div>
 
-      <Link to="/transactions">
-        <Button
-          className="fixed bottom-20 right-6 w-14 h-14 rounded-full shadow-lg bg-cyan-500 hover:bg-cyan-400 text-slate-950"
-          size="icon"
-        >
-          <Plus className="w-6 h-6" />
-        </Button>
-      </Link>
+      <div className="fixed bottom-20 left-1/2 w-full max-w-md -translate-x-1/2 px-4">
+        <div className="flex justify-end">
+          <Link to="/transactions">
+            <Button
+              className="w-14 h-14 rounded-full shadow-lg bg-cyan-500 hover:bg-cyan-400 text-slate-950"
+              size="icon"
+            >
+              <Plus className="w-6 h-6" />
+            </Button>
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }
