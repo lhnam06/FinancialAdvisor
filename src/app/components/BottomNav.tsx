@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router";
 import {
   Home,
@@ -6,8 +6,10 @@ import {
   Bot,
   BarChart3,
   Plus,
+  Mic,
+  ScanLine,
+  Keyboard,
 } from "lucide-react";
-import { Mic, ScanLine } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,6 +22,8 @@ interface BottomNavProps {
 }
 
 export function BottomNav({ currentPath }: BottomNavProps) {
+  const [isQuickMenuOpen, setIsQuickMenuOpen] = useState(false);
+
   const navItems = [
     { path: "/", icon: Home, label: "Tổng quan", activeColor: "text-emerald-300" },
     { path: "/budget", icon: PieChart, label: "Ngân sách", activeColor: "text-orange-300" },
@@ -47,15 +51,24 @@ export function BottomNav({ currentPath }: BottomNavProps) {
           );
         })}
 
-        <DropdownMenu>
+        <DropdownMenu modal={false} onOpenChange={setIsQuickMenuOpen}>
           <DropdownMenuTrigger asChild>
             <button
               type="button"
-              className="flex flex-col items-center justify-center flex-1 h-full"
+              className="flex flex-col items-center justify-center flex-1 h-full group"
               aria-label="Thêm nhanh"
             >
-              <div className="h-9 w-9 rounded-lg border-2 border-cyan-400/80 bg-cyan-500 flex items-center justify-center text-slate-950 shadow-lg shadow-cyan-500/20 hover:bg-cyan-400 transition-colors">
-                <Plus className="w-4 h-4" strokeWidth={2.5} />
+              <div
+                className={`h-9 w-9 rounded-lg border-2 flex items-center justify-center text-slate-950 shadow-lg transition-all duration-200 ${
+                  isQuickMenuOpen
+                    ? "border-cyan-300 bg-cyan-300 shadow-cyan-400/30 ring-2 ring-cyan-300/40"
+                    : "border-cyan-400/80 bg-cyan-500 shadow-cyan-500/20 hover:bg-cyan-400"
+                }`}
+              >
+                <Plus
+                  className={`w-4 h-4 transition-transform duration-200 ${isQuickMenuOpen ? "rotate-45" : "rotate-0"}`}
+                  strokeWidth={2.5}
+                />
               </div>
             </button>
           </DropdownMenuTrigger>
@@ -69,6 +82,12 @@ export function BottomNav({ currentPath }: BottomNavProps) {
               <Link to="/smart-input?mode=voice" className="flex items-center gap-3">
                 <Mic className="h-4 w-4 text-cyan-300" />
                 <span className="text-sm">Giọng nói</span>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild className="cursor-pointer rounded-lg border border-emerald-500/20 bg-slate-900/80 px-3 py-2.5 mb-2">
+              <Link to="/transactions?add=1" className="flex items-center gap-3">
+                <Keyboard className="h-4 w-4 text-emerald-300" />
+                <span className="text-sm">Nhập thủ công</span>
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild className="cursor-pointer rounded-lg border border-violet-500/20 bg-slate-900/80 px-3 py-2.5">
