@@ -1,11 +1,30 @@
+# Frontend - FAINANCE
 
-# Flowlystic
+This folder contains the mobile-first frontend for the FAINANCE POC.
 
-This is a code bundle for Flowlystic. The original project is available at https://www.figma.com/design/aclW0yluz4Uq4HScVX3y64/Mobile-Finance-Advisor-UI.
+## Run locally
 
-  ## Running the code
+```bash
+npm i
+npm run dev
+```
 
-  Run `npm i` to install the dependencies.
+## Build
 
-  Run `npm run dev` to start the development server.
+```bash
+npm run build
+```
+
+## App modules
+
+- Dashboard
+- Transactions
+- Budget
+- Goals
+- Calendar
+- Smart Input
+- AI Advisor
+- Reports
+
+For full project context and POC alignment, see the repository root `README.md`.
   
