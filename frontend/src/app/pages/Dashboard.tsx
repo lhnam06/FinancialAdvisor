@@ -385,7 +385,10 @@ export function Dashboard() {
         </div>
       </div>
 
-      <div className="fixed bottom-20 left-1/2 w-full max-w-md -translate-x-1/2 px-4">
+      <div
+        className="fixed left-1/2 w-full max-w-md -translate-x-1/2 px-4"
+        style={{ bottom: "calc(84px + env(safe-area-inset-bottom))" }}
+      >
         <div className="flex justify-end">
           <Link to="/transactions">
             <Button

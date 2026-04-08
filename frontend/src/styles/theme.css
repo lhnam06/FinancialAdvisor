@@ -2,6 +2,8 @@
 
 :root {
   --font-size: 17px;
+  --safe-top: env(safe-area-inset-top);
+  --safe-bottom: env(safe-area-inset-bottom);
   --background: #f8fafc;
   --foreground: #0f172a;
   --card: #ffffff;
@@ -130,6 +132,8 @@
       radial-gradient(1200px 600px at 0% -10%, rgba(56, 189, 248, 0.14), transparent),
       radial-gradient(1000px 500px at 100% 0%, rgba(37, 99, 235, 0.12), transparent);
     min-height: 100vh;
+    overscroll-behavior-y: none;
+    -webkit-tap-highlight-color: transparent;
   }
 
   /**
@@ -181,5 +185,37 @@
     font-size: var(--text-base);
     font-weight: var(--font-weight-normal);
     line-height: 1.5;
+  }
+}
+
+@layer components {
+  .nav-lens-panel {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .nav-lens-panel::before {
+    content: "";
+    position: absolute;
+    inset: -24% -10% -10% -10%;
+    border-radius: 999px;
+    background-image:
+      radial-gradient(1200px 600px at 0% -10%, rgba(56, 189, 248, 0.14), transparent),
+      radial-gradient(1000px 500px at 100% 0%, rgba(37, 99, 235, 0.12), transparent);
+    background-color: var(--background);
+    transform: scale(1.08);
+    opacity: 0.9;
+    filter: saturate(1.12) contrast(1.04);
+  }
+
+  .nav-lens-panel::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background:
+      radial-gradient(120% 90% at 0% 50%, rgba(255, 255, 255, 0.16), transparent 56%),
+      radial-gradient(120% 90% at 100% 50%, rgba(255, 255, 255, 0.16), transparent 56%);
+    pointer-events: none;
   }
 }

@@ -109,7 +109,7 @@ export function Goals() {
           <Button
             variant="ghost"
             size="icon"
-            className="text-white hover:bg-white/20"
+            className="h-11 w-11 text-white hover:bg-white/20"
             onClick={() => navigate("/")}
           >
             <ChevronLeft className="w-6 h-6" />
@@ -136,16 +136,18 @@ export function Goals() {
 
       {/* Goals List */}
       <div className="px-4 mt-6 space-y-4">
-        <div className="flex items-center justify-between">
-          <h2 className="text-lg text-slate-100">Mục tiêu của bạn</h2>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setIsDialogOpen(true)}
-          >
-            <Plus className="w-4 h-4 mr-1" />
-            Thêm
-          </Button>
+        <div className="sticky top-0 z-20 -mx-4 px-4 py-3 bg-slate-950/90 backdrop-blur-md border-b border-slate-800/80">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg text-slate-100">Mục tiêu của bạn</h2>
+            <Button
+              variant="outline"
+              onClick={() => setIsDialogOpen(true)}
+              className="h-11 px-4 text-sm"
+            >
+              <Plus className="w-4 h-4 mr-1" />
+              Thêm
+            </Button>
+          </div>
         </div>
 
         {goals.map((goal) => {
@@ -164,7 +166,7 @@ export function Goals() {
                   </div>
                   <div>
                     <h3 className="text-sm mb-1 text-slate-100">{goal.name}</h3>
-                    <p className="text-xs text-slate-400">
+                    <p className="text-sm text-slate-400">
                       Mục tiêu: {formatCurrency(goal.targetAmount)}
                     </p>
                   </div>
@@ -193,7 +195,7 @@ export function Goals() {
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <div className="text-xs text-slate-400">
+                  <div className="text-sm text-slate-400">
                     {daysRemaining > 0 ? (
                       <span>⏱️ Còn {daysRemaining} ngày</span>
                     ) : (
@@ -203,8 +205,7 @@ export function Goals() {
                   {!isCompleted && (
                     <Button
                       variant="outline"
-                      size="sm"
-                      className="border-slate-700 bg-slate-950 text-slate-100 hover:bg-slate-800"
+                      className="h-11 px-4 text-sm border-slate-700 bg-slate-950 text-slate-100 hover:bg-slate-800"
                       onClick={() => {
                         setSelectedGoal(goal);
                         setIsAddMoneyOpen(true);
@@ -218,7 +219,7 @@ export function Goals() {
 
                 {!isCompleted && (
                   <div className="pt-3 border-t border-slate-800">
-                    <p className="text-xs text-slate-400 mb-1">Cần tiết kiệm mỗi tháng:</p>
+                    <p className="text-sm text-slate-400 mb-1">Cần tiết kiệm mỗi tháng:</p>
                     <p className="text-sm text-cyan-300">
                       {formatCurrency(
                         (goal.targetAmount - goal.currentAmount) / 
@@ -244,11 +245,11 @@ export function Goals() {
       {/* Tips */}
       <div className="px-4 mt-6">
         <Card className="p-4 bg-slate-900 border-slate-800">
-          <h3 className="text-sm mb-2 flex items-center gap-2">
+          <h3 className="text-base mb-2 flex items-center gap-2">
             <TrendingUp className="w-4 h-4 text-cyan-300" />
             Mẹo đạt mục tiêu
           </h3>
-          <ul className="text-xs text-slate-300 space-y-1">
+          <ul className="text-sm text-slate-300 space-y-1">
             <li>• Chia nhỏ mục tiêu lớn thành các mốc nhỏ hơn</li>
             <li>• Tự động chuyển tiền tiết kiệm vào đầu tháng</li>
             <li>• Theo dõi tiến độ thường xuyên để duy trì động lực</li>
@@ -272,6 +273,7 @@ export function Goals() {
               <Input
                 id="name"
                 placeholder="Ví dụ: Mua laptop mới"
+                className="h-11 text-base"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               />
@@ -283,6 +285,7 @@ export function Goals() {
                 id="targetAmount"
                 type="number"
                 placeholder="0"
+                className="h-11 text-base"
                 value={formData.targetAmount}
                 onChange={(e) => setFormData({ ...formData, targetAmount: e.target.value })}
               />
@@ -293,6 +296,7 @@ export function Goals() {
               <Input
                 id="deadline"
                 type="date"
+                className="h-11 text-base"
                 value={formData.deadline}
                 onChange={(e) => setFormData({ ...formData, deadline: e.target.value })}
               />
@@ -302,7 +306,7 @@ export function Goals() {
               <Button
                 type="button"
                 variant="outline"
-                className="flex-1"
+                className="flex-1 h-11 text-sm"
                 onClick={() => {
                   setIsDialogOpen(false);
                   resetForm();
@@ -310,7 +314,7 @@ export function Goals() {
               >
                 Hủy
               </Button>
-              <Button type="submit" className="flex-1">
+              <Button type="submit" className="flex-1 h-11 text-sm">
                 Tạo mục tiêu
               </Button>
             </div>
@@ -341,6 +345,7 @@ export function Goals() {
                 id="addAmount"
                 type="number"
                 placeholder="0"
+                className="h-11 text-base"
                 value={addAmount}
                 onChange={(e) => setAddAmount(e.target.value)}
               />
@@ -350,7 +355,7 @@ export function Goals() {
               <Button
                 type="button"
                 variant="outline"
-                className="flex-1"
+                className="flex-1 h-11 text-sm"
                 onClick={() => {
                   setIsAddMoneyOpen(false);
                   setSelectedGoal(null);
@@ -359,7 +364,7 @@ export function Goals() {
               >
                 Hủy
               </Button>
-              <Button className="flex-1" onClick={handleAddMoney}>
+              <Button className="flex-1 h-11 text-sm" onClick={handleAddMoney}>
                 Thêm tiền
               </Button>
             </div>

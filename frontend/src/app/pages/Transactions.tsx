@@ -294,13 +294,18 @@ export function Transactions() {
         if (!open) resetForm();
       }}>
         <DialogTrigger asChild>
-          <Button
-            className="fixed bottom-20 right-6 w-14 h-14 rounded-full shadow-lg"
-            size="icon"
-            onClick={() => setIsDialogOpen(true)}
+          <div
+            className="fixed left-1/2 w-full max-w-md -translate-x-1/2 px-4 flex justify-end pointer-events-none"
+            style={{ bottom: "calc(84px + env(safe-area-inset-bottom))" }}
           >
-            <Plus className="w-6 h-6" />
-          </Button>
+            <Button
+              className="w-14 h-14 rounded-full shadow-lg pointer-events-auto"
+              size="icon"
+              onClick={() => setIsDialogOpen(true)}
+            >
+              <Plus className="w-6 h-6" />
+            </Button>
+          </div>
         </DialogTrigger>
         <DialogContent className="max-w-md">
           <DialogHeader>

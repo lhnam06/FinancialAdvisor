@@ -3,11 +3,12 @@ import { BottomNav } from "./BottomNav";
 
 export function Layout() {
   const location = useLocation();
+  const hideBottomNav = location.pathname === "/ai-advisor";
   
   return (
-    <div className="min-h-screen bg-transparent pb-20">
+    <div className={`min-h-screen bg-transparent ${hideBottomNav ? "" : "pb-[calc(5.5rem+env(safe-area-inset-bottom))]"}`}>
       <Outlet />
-      <BottomNav currentPath={location.pathname} />
+      {!hideBottomNav && <BottomNav currentPath={location.pathname} />}
     </div>
   );
 }

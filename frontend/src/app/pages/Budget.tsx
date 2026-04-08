@@ -129,7 +129,7 @@ export function Budget() {
           <Button
             variant="ghost"
             size="icon"
-            className="text-white hover:bg-white/20"
+            className="h-11 w-11 text-white hover:bg-white/20"
             onClick={() => navigate("/")}
           >
             <ChevronLeft className="w-6 h-6" />
@@ -153,17 +153,18 @@ export function Budget() {
 
       {/* Budget Categories */}
       <div className="px-4 mt-6 space-y-4">
-        <div className="flex items-center justify-between">
+        <div className="sticky top-0 z-20 -mx-4 px-4 py-3 bg-slate-950/90 backdrop-blur-md border-b border-slate-800/80">
+          <div className="flex items-center justify-between">
           <h2 className="text-xl font-semibold text-slate-100">Danh mục ngân sách</h2>
           <Button
             variant="outline"
-            size="sm"
             onClick={() => setIsDialogOpen(true)}
-            className="border-slate-700 bg-slate-900 text-slate-100 hover:bg-slate-800"
+            className="h-11 px-4 text-sm border-slate-700 bg-slate-900 text-slate-100 hover:bg-slate-800"
           >
             <Plus className="w-4 h-4 mr-1" />
             Thêm
           </Button>
+          </div>
         </div>
 
         {budgets.map((budget) => {
@@ -192,7 +193,7 @@ export function Budget() {
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="h-8 w-8 text-slate-300 hover:text-slate-100"
+                    className="h-11 w-11 text-slate-300 hover:text-slate-100"
                     onClick={() => handleEdit(budget)}
                   >
                     <Edit className="w-4 h-4" />
@@ -269,7 +270,7 @@ export function Budget() {
             <div>
               <Label htmlFor="category">Danh mục</Label>
               <Select value={formData.category} onValueChange={(value) => setFormData({ ...formData, category: value })}>
-                <SelectTrigger>
+                <SelectTrigger className="h-11 text-base">
                   <SelectValue placeholder="Chọn danh mục" />
                 </SelectTrigger>
                 <SelectContent>
@@ -290,6 +291,7 @@ export function Budget() {
                 id="limit"
                 type="number"
                 placeholder="0"
+                className="h-11 text-base"
                 value={formData.limit}
                 onChange={(e) => setFormData({ ...formData, limit: e.target.value })}
               />
@@ -299,7 +301,7 @@ export function Budget() {
               <Button
                 type="button"
                 variant="outline"
-                className="flex-1"
+                className="flex-1 h-11 text-sm"
                 onClick={() => {
                   setIsDialogOpen(false);
                   resetForm();
@@ -307,7 +309,7 @@ export function Budget() {
               >
                 Hủy
               </Button>
-              <Button type="submit" className="flex-1">
+              <Button type="submit" className="flex-1 h-11 text-sm">
                 {editingBudget ? "Cập nhật" : "Thêm"}
               </Button>
             </div>
