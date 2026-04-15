@@ -11,6 +11,10 @@ from core.enums import TransactionSource, TransactionType
 from db.base import Base
 
 
+def enum_values(enum_cls):
+    return [item.value for item in enum_cls]
+
+
 class Transaction(Base):
     __tablename__ = "transactions"
 
@@ -39,7 +43,12 @@ class Transaction(Base):
         nullable=False,
     )
     type: Mapped[TransactionType] = mapped_column(
-        Enum(TransactionType, name="transaction_type", create_type=False),
+        Enum(
+            TransactionType,
+            name="transaction_type",
+            create_type=False,
+            values_callable=enum_values,
+        ),
         nullable=False,
     )
     amount_minor: Mapped[int] = mapped_column(BigInteger, nullable=False)
@@ -47,7 +56,12 @@ class Transaction(Base):
     description: Mapped[str] = mapped_column(String(255), nullable=False)
     transaction_date: Mapped[date] = mapped_column(nullable=False)
     source: Mapped[TransactionSource] = mapped_column(
-        Enum(TransactionSource, name="transaction_source", create_type=False),
+        Enum(
+            TransactionSource,
+            name="transaction_source",
+            create_type=False,
+            values_callable=enum_values,
+        ),
         nullable=False,
         default=TransactionSource.MANUAL,
     )

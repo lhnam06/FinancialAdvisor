@@ -11,6 +11,10 @@ from core.enums import SmartInputMode, SmartInputStatus, TransactionType
 from db.base import Base
 
 
+def enum_values(enum_cls):
+    return [item.value for item in enum_cls]
+
+
 class SmartInputDraft(Base):
     __tablename__ = "smart_input_drafts"
 
@@ -39,17 +43,32 @@ class SmartInputDraft(Base):
         nullable=False,
     )
     mode: Mapped[SmartInputMode] = mapped_column(
-        Enum(SmartInputMode, name="smart_input_mode", create_type=False),
+        Enum(
+            SmartInputMode,
+            name="smart_input_mode",
+            create_type=False,
+            values_callable=enum_values,
+        ),
         nullable=False,
     )
     status: Mapped[SmartInputStatus] = mapped_column(
-        Enum(SmartInputStatus, name="smart_input_status", create_type=False),
+        Enum(
+            SmartInputStatus,
+            name="smart_input_status",
+            create_type=False,
+            values_callable=enum_values,
+        ),
         nullable=False,
     )
     raw_text: Mapped[str | None] = mapped_column(nullable=True)
     source_file_ref: Mapped[str | None] = mapped_column(nullable=True)
     parsed_type: Mapped[TransactionType | None] = mapped_column(
-        Enum(TransactionType, name="transaction_type", create_type=False),
+        Enum(
+            TransactionType,
+            name="transaction_type",
+            create_type=False,
+            values_callable=enum_values,
+        ),
         nullable=True,
     )
     parsed_amount_minor: Mapped[int | None] = mapped_column(nullable=True)

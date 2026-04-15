@@ -11,6 +11,10 @@ from core.enums import CategoryFlowType
 from db.base import Base
 
 
+def enum_values(enum_cls):
+    return [item.value for item in enum_cls]
+
+
 class Category(Base):
     __tablename__ = "categories"
 
@@ -34,7 +38,12 @@ class Category(Base):
     name: Mapped[str] = mapped_column(String(100), nullable=False)
     slug: Mapped[str] = mapped_column(String(100), nullable=False)
     flow_type: Mapped[CategoryFlowType] = mapped_column(
-        Enum(CategoryFlowType, name="category_flow_type", create_type=False),
+        Enum(
+            CategoryFlowType,
+            name="category_flow_type",
+            create_type=False,
+            values_callable=enum_values,
+        ),
         nullable=False,
     )
     icon_key: Mapped[str] = mapped_column(String(50), nullable=False)
