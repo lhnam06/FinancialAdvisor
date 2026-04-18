@@ -21,6 +21,7 @@ import {
   BookOpen,
   Wallet,
   TrendingUp,
+  Lightbulb,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Progress } from "../components/ui/progress";
@@ -99,17 +100,17 @@ export function Budget() {
     const iconName = categories.find((c) => c.name === categoryName)?.icon;
     switch (iconName) {
       case "utensils":
-        return <UtensilsCrossed className="w-4 h-4 text-amber-300" />;
+        return <UtensilsCrossed className="w-4 h-4 text-emerald-300" />;
       case "shopping-bag":
-        return <ShoppingBag className="w-4 h-4 text-violet-300" />;
+        return <ShoppingBag className="w-4 h-4 text-emerald-300" />;
       case "car":
-        return <Car className="w-4 h-4 text-cyan-300" />;
+        return <Car className="w-4 h-4 text-emerald-300" />;
       case "film":
         return <Film className="w-4 h-4 text-pink-300" />;
       case "home":
         return <House className="w-4 h-4 text-emerald-300" />;
       case "heart":
-        return <HeartPulse className="w-4 h-4 text-rose-300" />;
+        return <HeartPulse className="w-4 h-4 text-emerald-300" />;
       case "book":
         return <BookOpen className="w-4 h-4 text-indigo-300" />;
       case "wallet":
@@ -124,12 +125,12 @@ export function Budget() {
   return (
     <div className="max-w-md mx-auto min-h-screen pb-6">
       {/* Header */}
-      <div className="bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 text-slate-100 p-6 border-b border-slate-800">
+      <div className="px-5 pt-5 pb-4">
         <div className="flex items-center gap-3 mb-6">
           <Button
             variant="ghost"
             size="icon"
-            className="h-11 w-11 text-white hover:bg-white/20"
+            className="h-11 w-11 text-foreground hover:bg-foreground/10"
             onClick={() => navigate("/")}
           >
             <ChevronLeft className="w-6 h-6" />
@@ -141,10 +142,10 @@ export function Budget() {
         <Card className="bg-slate-900/70 backdrop-blur-sm border-slate-700 p-5">
           <p className="text-base text-slate-200 mb-1">Tổng ngân sách tháng này</p>
           <div className="flex items-baseline gap-2 mb-4">
-            <p className="text-2xl text-cyan-300">{formatCurrency(totalSpent)}</p>
+            <p className="text-2xl text-rose-300 tabular-nums">{formatCurrency(totalSpent)}</p>
             <p className="text-base text-slate-300">/ {formatCurrency(totalBudget)}</p>
           </div>
-          <Progress value={overallPercentage} className="h-3 bg-slate-800 [&>div]:bg-cyan-400" />
+          <Progress value={overallPercentage} className="h-3 bg-slate-800 [&>div]:bg-emerald-400" />
           <p className="text-sm text-slate-300 mt-3">
             Còn lại: {formatCurrency(totalBudget - totalSpent)}
           </p>
@@ -188,7 +189,7 @@ export function Budget() {
                 </div>
                 <div className="flex items-center gap-2">
                   {(isOverBudget || isWarning) && (
-                    <AlertTriangle className={`w-5 h-5 ${isOverBudget ? "text-red-500" : "text-yellow-500"}`} />
+                    <AlertTriangle className="w-5 h-5 text-emerald-500" />
                   )}
                   <Button
                     variant="ghost"
@@ -206,15 +207,15 @@ export function Budget() {
                   value={Math.min(percentage, 100)} 
                   className={`h-2 ${
                     isOverBudget 
-                      ? "[&>div]:bg-red-500" 
+                      ? "[&>div]:bg-emerald-500"
                       : isWarning 
-                      ? "[&>div]:bg-yellow-500" 
+                      ? "[&>div]:bg-emerald-500" 
                       : "[&>div]:bg-emerald-500"
                   }`}
                 />
                 <div className="flex items-center justify-between text-sm">
                   <span className={
-                    isOverBudget ? "text-rose-400" : isWarning ? "text-amber-400" : "text-slate-300"
+                    isOverBudget ? "text-emerald-400" : isWarning ? "text-emerald-400" : "text-slate-300"
                   }>
                     {percentage.toFixed(0)}% đã sử dụng
                   </span>
@@ -225,9 +226,10 @@ export function Budget() {
               </div>
 
               {isOverBudget && (
-                <div className="mt-3 p-2 bg-rose-900/20 border border-rose-700/30 rounded-lg">
-                  <p className="text-sm text-rose-200">
-                    ⚠️ Đã vượt ngân sách {formatCurrency(budget.spent - budget.limit)}
+                <div className="mt-3 p-2 bg-emerald-900/20 border border-emerald-700/30 rounded-lg">
+                  <p className="text-sm text-emerald-200 flex items-center gap-1.5">
+                    <AlertTriangle className="w-4 h-4" />
+                    Đã vượt ngân sách {formatCurrency(budget.spent - budget.limit)}
                   </p>
                 </div>
               )}
@@ -246,7 +248,10 @@ export function Budget() {
       {/* Tips */}
       <div className="px-4 mt-6">
         <Card className="p-4 bg-slate-900 border-slate-800">
-          <h3 className="text-base font-semibold mb-2 text-cyan-300">💡 Mẹo quản lý ngân sách</h3>
+          <h3 className="text-base font-semibold mb-2 text-emerald-300 flex items-center gap-2">
+            <Lightbulb className="w-4 h-4" />
+            Mẹo quản lý ngân sách
+          </h3>
           <ul className="text-sm text-slate-200 space-y-2">
             <li>• Áp dụng quy tắc 50/30/20: 50% nhu cầu, 30% mong muốn, 20% tiết kiệm</li>
             <li>• Theo dõi chi tiêu hàng ngày để kiểm soát ngân sách</li>

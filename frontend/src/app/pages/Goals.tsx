@@ -6,7 +6,21 @@ import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../components/ui/dialog";
 import { mockGoals, Goal as GoalType } from "../lib/mockData";
-import { ChevronLeft, Plus, Target, TrendingUp, Edit } from "lucide-react";
+import {
+  ChevronLeft,
+  Plus,
+  Target,
+  TrendingUp,
+  Edit,
+  Laptop,
+  Plane,
+  Shield,
+  House,
+  Car,
+  Clock,
+  AlertTriangle,
+  type LucideIcon,
+} from "lucide-react";
 import { toast } from "sonner";
 import { Progress } from "../components/ui/progress";
 
@@ -82,15 +96,16 @@ export function Goals() {
   };
 
   const getGoalIcon = (iconName: string) => {
-    const iconMap: Record<string, string> = {
-      "laptop": "💻",
-      "plane": "✈️",
-      "shield": "🛡️",
-      "target": "🎯",
-      "home": "🏠",
-      "car": "🚗",
+    const iconMap: Record<string, LucideIcon> = {
+      laptop: Laptop,
+      plane: Plane,
+      shield: Shield,
+      target: Target,
+      home: House,
+      car: Car,
     };
-    return iconMap[iconName] || "🎯";
+    const Icon = iconMap[iconName] ?? Target;
+    return <Icon className="w-6 h-6 text-emerald-300" />;
   };
 
   const getDaysRemaining = (deadline: string) => {
@@ -104,12 +119,12 @@ export function Goals() {
   return (
     <div className="max-w-md mx-auto min-h-screen pb-6">
       {/* Header */}
-      <div className="bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 text-slate-100 p-6 border-b border-slate-800">
+      <div className="px-5 pt-5 pb-4">
         <div className="flex items-center gap-3 mb-6">
           <Button
             variant="ghost"
             size="icon"
-            className="h-11 w-11 text-white hover:bg-white/20"
+            className="h-11 w-11 text-foreground hover:bg-foreground/10"
             onClick={() => navigate("/")}
           >
             <ChevronLeft className="w-6 h-6" />
@@ -159,7 +174,7 @@ export function Goals() {
             <Card key={goal.id} className={`p-5 bg-slate-900 border-slate-800 ${isCompleted ? "ring-1 ring-emerald-400/40" : ""}`}>
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center gap-3">
-                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-2xl ${
+                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
                     isCompleted ? "bg-emerald-500/20 border border-emerald-500/30" : "bg-slate-800 border border-slate-700"
                   }`}>
                     {getGoalIcon(goal.icon)}
@@ -190,16 +205,22 @@ export function Goals() {
                   </div>
                   <Progress 
                     value={Math.min(percentage, 100)} 
-                    className={`h-3 bg-slate-800 ${isCompleted ? "[&>div]:bg-emerald-500" : "[&>div]:bg-cyan-400"}`}
+                    className={`h-3 bg-slate-800 [&>div]:bg-emerald-500`}
                   />
                 </div>
 
                 <div className="flex items-center justify-between">
                   <div className="text-sm text-slate-400">
                     {daysRemaining > 0 ? (
-                      <span>⏱️ Còn {daysRemaining} ngày</span>
+                      <span className="inline-flex items-center gap-1.5">
+                        <Clock className="w-4 h-4" />
+                        Còn {daysRemaining} ngày
+                      </span>
                     ) : (
-                      <span className="text-rose-400">⚠️ Đã hết hạn</span>
+                      <span className="text-emerald-400 inline-flex items-center gap-1.5">
+                        <AlertTriangle className="w-4 h-4" />
+                        Đã hết hạn
+                      </span>
                     )}
                   </div>
                   {!isCompleted && (
@@ -220,7 +241,7 @@ export function Goals() {
                 {!isCompleted && (
                   <div className="pt-3 border-t border-slate-800">
                     <p className="text-sm text-slate-400 mb-1">Cần tiết kiệm mỗi tháng:</p>
-                    <p className="text-sm text-cyan-300">
+                    <p className="text-sm text-emerald-300">
                       {formatCurrency(
                         (goal.targetAmount - goal.currentAmount) / 
                         Math.max(Math.ceil(daysRemaining / 30), 1)
@@ -246,7 +267,7 @@ export function Goals() {
       <div className="px-4 mt-6">
         <Card className="p-4 bg-slate-900 border-slate-800">
           <h3 className="text-base mb-2 flex items-center gap-2">
-            <TrendingUp className="w-4 h-4 text-cyan-300" />
+            <TrendingUp className="w-4 h-4 text-emerald-300" />
             Mẹo đạt mục tiêu
           </h3>
           <ul className="text-sm text-slate-300 space-y-1">

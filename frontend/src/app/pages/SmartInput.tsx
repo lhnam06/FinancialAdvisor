@@ -143,34 +143,34 @@ export function SmartInput() {
   return (
     <div className="max-w-md mx-auto min-h-screen pb-6">
       {/* Header */}
-      <div className="bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 text-slate-100 p-6 border-b border-slate-800">
+      <div className="px-5 pt-5 pb-4">
         <div className="flex items-center gap-3 mb-4">
           <Button
             variant="ghost"
             size="icon"
-            className="text-white hover:bg-white/20"
+            className="text-foreground hover:bg-foreground/10"
             onClick={() => navigate("/")}
           >
             <ChevronLeft className="w-6 h-6" />
           </Button>
           <h1 className="text-2xl">Nhập liệu thông minh</h1>
         </div>
-        <p className="text-sm opacity-90">
+        <p className="text-sm text-muted-foreground">
           Nhập giao dịch nhanh chóng bằng giọng nói hoặc quét hóa đơn
         </p>
       </div>
 
       {/* Input Methods */}
       <div className="px-4 mt-6">
-        <Card className="mb-6 overflow-hidden bg-slate-900 border-slate-800 border-cyan-500/20">
+        <Card className="mb-6 overflow-hidden bg-slate-900 border-slate-800 border-emerald-500/20">
           <div className="p-4">
-            <p className="text-[11px] uppercase tracking-wide text-cyan-400/90 font-medium mb-1">
+            <p className="text-[11px] uppercase tracking-wide text-emerald-400/90 font-medium mb-1">
               Bước 1 · Nhanh nhất
             </p>
             <p className="text-sm text-slate-300 mb-4">
               Thêm giao dịch bằng form đầy đủ (số tiền, danh mục, ngày). Phù hợp khi bạn muốn nhập chính xác.
             </p>
-            <Button asChild size="lg" className="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-semibold">
+            <Button asChild size="lg" className="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold">
               <Link to="/transactions?add=1" className="flex items-center justify-center gap-2">
                 <PenLine className="w-5 h-5" />
                 Thêm giao dịch thủ công
@@ -202,9 +202,9 @@ export function SmartInput() {
             <Card className="p-6 bg-slate-900 border-slate-800">
               <div className="text-center space-y-4">
                 <div className={`w-24 h-24 mx-auto rounded-full flex items-center justify-center transition-all ${
-                  isRecording ? "bg-rose-500/20 animate-pulse" : "bg-cyan-500/20"
+                  isRecording ? "bg-emerald-500/20 animate-pulse" : "bg-emerald-500/20"
                 }`}>
-                  <Mic className={`w-12 h-12 ${isRecording ? "text-rose-300" : "text-cyan-300"}`} />
+                  <Mic className="w-12 h-12 text-emerald-300" />
                 </div>
                 
                 <div>
@@ -229,9 +229,9 @@ export function SmartInput() {
               </div>
 
               <div className="mt-6 space-y-3">
-                <div className="p-3 bg-cyan-900/20 border border-cyan-700/30 rounded-lg">
+                <div className="p-3 bg-emerald-900/20 border border-emerald-700/30 rounded-lg">
                   <h3 className="text-sm mb-2 flex items-center gap-2">
-                    <AlertCircle className="w-4 h-4 text-cyan-300" />
+                    <AlertCircle className="w-4 h-4 text-emerald-300" />
                     Hướng dẫn sử dụng
                   </h3>
                   <ul className="text-xs text-slate-300 space-y-1">
@@ -250,8 +250,8 @@ export function SmartInput() {
             <Card className="p-6 bg-slate-900 border-slate-800">
               {!uploadedImage ? (
                 <div className="text-center space-y-4">
-                  <div className="w-24 h-24 mx-auto rounded-full bg-violet-500/20 flex items-center justify-center">
-                    <Camera className="w-12 h-12 text-violet-300" />
+                  <div className="w-24 h-24 mx-auto rounded-full bg-emerald-500/20 flex items-center justify-center">
+                    <Camera className="w-12 h-12 text-emerald-300" />
                   </div>
                   
                   <div>
@@ -275,9 +275,9 @@ export function SmartInput() {
                     />
                   </div>
 
-                  <div className="mt-6 p-3 bg-violet-900/20 border border-violet-700/30 rounded-lg">
+                  <div className="mt-6 p-3 bg-emerald-900/20 border border-emerald-700/30 rounded-lg">
                     <h3 className="text-sm mb-2 flex items-center gap-2">
-                      <AlertCircle className="w-4 h-4 text-violet-300" />
+                      <AlertCircle className="w-4 h-4 text-emerald-300" />
                       Mẹo chụp hóa đơn tốt
                     </h3>
                     <ul className="text-xs text-slate-300 space-y-1">
@@ -347,7 +347,7 @@ export function SmartInput() {
         {(extractedData.amount || extractedData.description) && (
           <Card className="p-6 mt-6 bg-slate-900 border-slate-800">
             <div className="flex items-center gap-2 mb-4">
-              <Edit className="w-5 h-5 text-cyan-300" />
+              <Edit className="w-5 h-5 text-emerald-300" />
               <h3 className="text-lg text-slate-100">Xác nhận thông tin</h3>
             </div>
             

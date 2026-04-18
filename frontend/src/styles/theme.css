@@ -4,8 +4,16 @@
   --font-size: 17px;
   --safe-top: env(safe-area-inset-top);
   --safe-bottom: env(safe-area-inset-bottom);
-  --background: #f8fafc;
+  --background: #eef2f7;
   --foreground: #0f172a;
+  --app-bg:
+    radial-gradient(1200px 720px at 8% -12%, rgba(16, 185, 129, 0.18), transparent 62%),
+    radial-gradient(900px 560px at 100% 0%, rgba(59, 130, 246, 0.14), transparent 60%),
+    radial-gradient(800px 520px at 50% 110%, rgba(139, 92, 246, 0.12), transparent 62%),
+    radial-gradient(600px 420px at 110% 60%, rgba(14, 165, 233, 0.10), transparent 60%),
+    linear-gradient(180deg, #f6f8fb 0%, #eef2f7 55%, #e6ebf3 100%);
+  --app-bg-overlay: rgba(255, 255, 255, 0.02);
+  --app-noise-opacity: 0.28;
   --card: #ffffff;
   --card-foreground: #0f172a;
   --popover: oklch(1 0 0);
@@ -24,8 +32,8 @@
   --input: transparent;
   --input-background: #f3f3f5;
   --switch-background: #cbced4;
-  --font-weight-medium: 500;
-  --font-weight-normal: 400;
+  --font-weight-medium: 600;
+  --font-weight-normal: 500;
   --ring: oklch(0.708 0 0);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
@@ -44,40 +52,45 @@
 }
 
 .dark {
-  --background: #030712;
-  --foreground: #e2e8f0;
-  --card: #0f172a;
-  --card-foreground: #e2e8f0;
-  --popover: #0b1220;
-  --popover-foreground: #e2e8f0;
-  --primary: #38bdf8;
-  --primary-foreground: #082f49;
-  --secondary: #1e293b;
-  --secondary-foreground: #cbd5e1;
-  --muted: #1e293b;
-  --muted-foreground: #94a3b8;
-  --accent: #0f2746;
-  --accent-foreground: #bae6fd;
+  --background: #04070c;
+  --foreground: #dcfce7;
+  --app-bg:
+    radial-gradient(900px 600px at 0% -10%, rgba(16, 185, 129, 0.14), transparent 60%),
+    radial-gradient(700px 440px at 100% 0%, rgba(20, 184, 166, 0.08), transparent 65%),
+    radial-gradient(700px 520px at -10% 80%, rgba(6, 78, 59, 0.25), transparent 72%),
+    linear-gradient(180deg, #05080c 0%, #020407 60%, #000000 100%);
+  --app-bg-overlay: rgba(0, 0, 0, 0.18);
+  --app-noise-opacity: 0.22;
+  --card: #041108;
+  --card-foreground: #dcfce7;
+  --popover: #041108;
+  --popover-foreground: #dcfce7;
+  --primary: #22c55e;
+  --primary-foreground: #022c12;
+  --secondary: #052e16;
+  --secondary-foreground: #bbf7d0;
+  --muted: #052e16;
+  --muted-foreground: #86efac;
   --destructive: #ef4444;
   --destructive-foreground: #fee2e2;
-  --border: rgba(148, 163, 184, 0.26);
-  --input: #1e293b;
-  --ring: #38bdf8;
-  --font-weight-medium: 500;
-  --font-weight-normal: 400;
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: #020617;
-  --sidebar-foreground: #e2e8f0;
-  --sidebar-primary: #38bdf8;
-  --sidebar-primary-foreground: #082f49;
-  --sidebar-accent: #0f172a;
-  --sidebar-accent-foreground: #bae6fd;
-  --sidebar-border: rgba(148, 163, 184, 0.26);
-  --sidebar-ring: #38bdf8;
+  --border: rgba(34, 197, 94, 0.35);
+  --input: #052e16;
+  --ring: #22c55e;
+  --font-weight-medium: 600;
+  --font-weight-normal: 500;
+  --chart-1: oklch(0.73 0.2 145);
+  --chart-2: oklch(0.66 0.16 150);
+  --chart-3: oklch(0.58 0.14 152);
+  --chart-4: oklch(0.5 0.11 155);
+  --chart-5: oklch(0.43 0.09 158);
+  --sidebar: #020a04;
+  --sidebar-foreground: #dcfce7;
+  --sidebar-primary: #22c55e;
+  --sidebar-primary-foreground: #022c12;
+  --sidebar-accent: #052e16;
+  --sidebar-accent-foreground: #bbf7d0;
+  --sidebar-border: rgba(34, 197, 94, 0.35);
+  --sidebar-ring: #22c55e;
 }
 
 @theme inline {
@@ -126,14 +139,51 @@
     @apply border-border outline-ring/50;
   }
 
+  html,
+  body {
+    min-height: 100vh;
+  }
+
   body {
     @apply bg-background text-foreground;
-    background-image:
-      radial-gradient(1200px 600px at 0% -10%, rgba(56, 189, 248, 0.14), transparent),
-      radial-gradient(1000px 500px at 100% 0%, rgba(37, 99, 235, 0.12), transparent);
-    min-height: 100vh;
+    position: relative;
+    background-color: var(--background);
+    background-image: var(--app-bg);
+    background-attachment: fixed;
+    background-size: cover;
+    background-repeat: no-repeat;
     overscroll-behavior-y: none;
     -webkit-tap-highlight-color: transparent;
+    transition: background-color 400ms ease, color 300ms ease;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240' viewBox='0 0 240 240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    background-size: 240px 240px;
+    opacity: var(--app-noise-opacity);
+    mix-blend-mode: overlay;
+  }
+
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background-image:
+      radial-gradient(60% 40% at 50% 0%, var(--app-bg-overlay), transparent 70%),
+      radial-gradient(50% 35% at 50% 100%, var(--app-bg-overlay), transparent 70%);
+  }
+
+  #root {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
   }
 
   /**
@@ -147,25 +197,25 @@
 
   h1 {
     font-size: var(--text-2xl);
-    font-weight: var(--font-weight-medium);
+    font-weight: 700;
     line-height: 1.5;
   }
 
   h2 {
     font-size: var(--text-xl);
-    font-weight: var(--font-weight-medium);
+    font-weight: 700;
     line-height: 1.5;
   }
 
   h3 {
     font-size: var(--text-lg);
-    font-weight: var(--font-weight-medium);
+    font-weight: 600;
     line-height: 1.5;
   }
 
   h4 {
     font-size: var(--text-base);
-    font-weight: var(--font-weight-medium);
+    font-weight: 600;
     line-height: 1.5;
   }
 
@@ -186,6 +236,77 @@
     font-weight: var(--font-weight-normal);
     line-height: 1.5;
   }
+}
+
+/* ------------------------------------------------------------------
+ * Light-mode remapping for pages that hardcode dark slate utilities.
+ * Any element inside an element tagged `.hero-dark` keeps its original
+ * dark-on-emerald treatment (brand hero gradient).
+ * ------------------------------------------------------------------ */
+@layer utilities {
+  .hero-dark {
+    color-scheme: dark;
+  }
+
+  /* ----- Unify slate surfaces to the Calendar panel look -----
+   *
+   * Calendar uses `bg-card/60 border-border/60 backdrop-blur-sm`.
+   * Route the hardcoded slate utilities through the same `--card` /
+   * `--border` theme tokens so every card takes that exact tint in
+   * both themes. Elements inside `.hero-dark` keep their original look.
+   * ------------------------------------------------------------- */
+
+  :is(.light, .dark) .bg-slate-900:not(.hero-dark):not(.hero-dark *),
+  :is(.light, .dark) .bg-slate-900\/40:not(.hero-dark):not(.hero-dark *),
+  :is(.light, .dark) .bg-slate-900\/50:not(.hero-dark):not(.hero-dark *),
+  :is(.light, .dark) .bg-slate-900\/60:not(.hero-dark):not(.hero-dark *),
+  :is(.light, .dark) .bg-slate-900\/70:not(.hero-dark):not(.hero-dark *),
+  :is(.light, .dark) .bg-slate-900\/80:not(.hero-dark):not(.hero-dark *),
+  :is(.light, .dark) .bg-slate-900\/90:not(.hero-dark):not(.hero-dark *) {
+    background-color: color-mix(in oklab, var(--card) 60%, transparent) !important;
+    backdrop-filter: blur(14px) saturate(1.2);
+    -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  }
+
+  :is(.light, .dark) .bg-slate-950:not(.hero-dark):not(.hero-dark *),
+  :is(.light, .dark) .bg-slate-950\/70:not(.hero-dark):not(.hero-dark *),
+  :is(.light, .dark) .bg-slate-950\/80:not(.hero-dark):not(.hero-dark *),
+  :is(.light, .dark) .bg-slate-950\/90:not(.hero-dark):not(.hero-dark *) {
+    background-color: color-mix(in oklab, var(--card) 50%, transparent) !important;
+    backdrop-filter: blur(10px) saturate(1.15);
+    -webkit-backdrop-filter: blur(10px) saturate(1.15);
+  }
+
+  :is(.light, .dark) .bg-slate-800:not(.hero-dark):not(.hero-dark *) {
+    background-color: color-mix(in oklab, var(--muted) 70%, transparent) !important;
+  }
+
+  :is(.light, .dark) .hover\:bg-slate-800:not(.hero-dark):not(.hero-dark *):hover {
+    background-color: color-mix(in oklab, var(--muted) 90%, transparent) !important;
+  }
+
+  :is(.light, .dark) .border-slate-700:not(.hero-dark):not(.hero-dark *),
+  :is(.light, .dark) .border-slate-800:not(.hero-dark):not(.hero-dark *),
+  :is(.light, .dark) .border-slate-800\/80:not(.hero-dark):not(.hero-dark *) {
+    border-color: color-mix(in oklab, var(--border) 60%, transparent) !important;
+  }
+
+  :is(.light, .dark) .divide-slate-800:not(.hero-dark):not(.hero-dark *) > :not([hidden]) ~ :not([hidden]) {
+    border-color: color-mix(in oklab, var(--border) 60%, transparent) !important;
+  }
+
+  .light .text-slate-100:not(.hero-dark):not(.hero-dark *) { color: #0f172a !important; }
+  .light .text-slate-200:not(.hero-dark):not(.hero-dark *) { color: #1e293b !important; }
+  .light .text-slate-300:not(.hero-dark):not(.hero-dark *) { color: #334155 !important; }
+  .light .text-slate-400:not(.hero-dark):not(.hero-dark *) { color: #475569 !important; }
+  .light .text-slate-500:not(.hero-dark):not(.hero-dark *) { color: #64748b !important; }
+  .light .text-slate-600:not(.hero-dark):not(.hero-dark *) { color: #64748b !important; }
+
+  /* Emerald accents need more contrast on a light canvas */
+  .light .text-emerald-100:not(.hero-dark):not(.hero-dark *),
+  .light .text-emerald-200:not(.hero-dark):not(.hero-dark *) { color: #065f46 !important; }
+  .light .text-emerald-300:not(.hero-dark):not(.hero-dark *) { color: #047857 !important; }
+  .light .text-emerald-400:not(.hero-dark):not(.hero-dark *) { color: #059669 !important; }
 }
 
 @layer components {

@@ -1,15 +1,19 @@
-@import url("https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;500;600;700;800&display=swap&subset=vietnamese");
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,500&display=swap&subset=vietnamese");
 @import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;600;700&display=swap&subset=vietnamese");
 
 :root {
   --font-sans:
-    "Noto Serif",
-    ui-serif,
-    Georgia,
-    Cambria,
-    "Times New Roman",
-    Times,
-    serif;
+    "Noto Sans",
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    "Helvetica Neue",
+    Arial,
+    "Apple Color Emoji",
+    "Segoe UI Emoji",
+    sans-serif;
 
   --font-signature:
     "Dancing Script",
@@ -21,6 +25,15 @@
 html,
 body {
   font-family: var(--font-sans);
+  font-weight: 500;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+strong,
+b {
+  font-weight: 700;
 }
 
 .font-signature {

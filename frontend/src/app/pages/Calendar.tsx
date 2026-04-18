@@ -1,9 +1,18 @@
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router";
-import { Card } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { mockTransactions, Transaction } from "../lib/mockData";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Wallet,
+  ArrowUpRight,
+  ArrowUp,
+  ArrowDown,
+  MinusCircle,
+  PlusCircle,
+  ArrowLeftRight,
+} from "lucide-react";
 
 export function Calendar() {
   const navigate = useNavigate();
@@ -15,14 +24,14 @@ export function Calendar() {
   const month = currentDate.getMonth();
   const monthKey = `${year}-${String(month + 1).padStart(2, "0")}`;
   const daysInMonth = new Date(year, month + 1, 0).getDate();
-  const startingDayOfWeek = new Date(year, month, 1).getDay();
+  const daysInPrevMonth = new Date(year, month, 0).getDate();
+  const startingDayOfWeek = (new Date(year, month, 1).getDay() + 6) % 7; // Monday = 0
 
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("vi-VN", {
+  const formatCurrency = (amount: number) =>
+    new Intl.NumberFormat("vi-VN", {
       style: "currency",
       currency: "VND",
     }).format(amount);
-  };
 
   const shortMoney = (amount: number) => {
     const n = Math.round(amount);
@@ -57,230 +66,282 @@ export function Calendar() {
     setSelectedDay(1);
   };
 
-  const isToday = (day: number | null) => {
-    if (!day) return false;
-    const today = new Date(2026, 2, 24);
-    return day === today.getDate() && month === today.getMonth() && year === today.getFullYear();
-  };
-
-  const monthName = currentDate.toLocaleDateString("vi-VN", {
-    month: "long",
-    year: "numeric",
-  });
+  const todayRef = new Date(2026, 2, 24);
+  const isToday = (day: number) =>
+    day === todayRef.getDate() &&
+    month === todayRef.getMonth() &&
+    year === todayRef.getFullYear();
 
   const monthStats = useMemo(() => {
     const inMonth = transactions.filter((t) => t.date.startsWith(monthKey));
     const income = inMonth.filter((t) => t.type === "income").reduce((s, t) => s + t.amount, 0);
     const expense = inMonth.filter((t) => t.type === "expense").reduce((s, t) => s + t.amount, 0);
-    const net = income - expense;
-    return { income, expense, net };
+    return { income, expense, net: income - expense };
   }, [transactions, monthKey]);
 
   const selectedTotals = getDayTotals(selectedDay);
   const selectedList = selectedTotals.list;
 
-  const leadingEmpty = startingDayOfWeek;
-  const trailingCells = (7 - ((leadingEmpty + daysInMonth) % 7)) % 7;
+  type Cell = {
+    key: string;
+    day: number;
+    inMonth: boolean;
+  };
+
+  const cells: Cell[] = useMemo(() => {
+    const list: Cell[] = [];
+    for (let i = startingDayOfWeek - 1; i >= 0; i -= 1) {
+      const d = daysInPrevMonth - i;
+      list.push({ key: `prev-${d}`, day: d, inMonth: false });
+    }
+    for (let d = 1; d <= daysInMonth; d += 1) {
+      list.push({ key: `cur-${d}`, day: d, inMonth: true });
+    }
+    const tailCount = (7 - (list.length % 7)) % 7;
+    for (let d = 1; d <= tailCount; d += 1) {
+      list.push({ key: `next-${d}`, day: d, inMonth: false });
+    }
+    return list;
+  }, [startingDayOfWeek, daysInPrevMonth, daysInMonth]);
+
+  const monthLabel = `Tháng ${String(month + 1).padStart(2, "0")} ${year}`;
 
   return (
     <div className="max-w-md mx-auto min-h-screen pb-6">
-      <div className="bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 text-slate-100 p-6 border-b border-slate-800">
-        <div className="flex items-center gap-3 mb-6">
+      {/* Minimal hero */}
+      <div className="px-5 pt-5 pb-5">
+        <div className="flex items-center gap-2">
           <Button
             variant="ghost"
             size="icon"
-            className="text-white hover:bg-white/20"
+            className="text-foreground hover:bg-foreground/10 h-10 w-10"
             onClick={() => navigate("/")}
           >
             <ChevronLeft className="w-6 h-6" />
           </Button>
-          <h1 className="text-2xl">Lịch tài chính</h1>
-        </div>
-
-        <div className="flex items-center justify-between">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="text-white hover:bg-white/20"
-            onClick={previousMonth}
-          >
-            <ChevronLeft className="w-5 h-5" />
-          </Button>
-          <h2 className="text-xl capitalize">{monthName}</h2>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="text-white hover:bg-white/20"
-            onClick={nextMonth}
-          >
-            <ChevronRight className="w-5 h-5" />
-          </Button>
+          <h1 className="text-lg font-semibold">Lịch tài chính</h1>
         </div>
       </div>
 
-      <div className="px-4 mt-6">
-        <Card className="p-3 sm:p-4 bg-slate-900 border-slate-800">
-          <div className="grid grid-cols-7 gap-0.5 mb-1">
-            {["CN", "T2", "T3", "T4", "T5", "T6", "T7"].map((d) => (
-              <div key={d} className="text-center text-[10px] font-medium text-slate-500 py-1">
+      {/* Summary strip */}
+      <div className="px-4 -mt-5">
+        <div className="rounded-2xl border border-border/60 bg-card/70 backdrop-blur-sm px-4 py-3 shadow-sm">
+          <div className="flex items-center justify-center gap-5 flex-wrap text-sm">
+            <span className="inline-flex items-center gap-1.5">
+              <Wallet className="w-4 h-4 text-emerald-500" />
+              <span className="text-muted-foreground">Số dư:</span>
+              <span
+                className={`font-semibold tabular-nums ${
+                  monthStats.net >= 0 ? "text-emerald-500" : "text-rose-500"
+                }`}
+              >
+                {shortMoney(monthStats.net)} đ
+              </span>
+            </span>
+            <span className="inline-flex items-center gap-1.5">
+              <ArrowUpRight className="w-4 h-4 text-emerald-500" />
+              <span className="text-muted-foreground">Dòng tiền:</span>
+              <span
+                className={`font-semibold tabular-nums ${
+                  monthStats.net >= 0 ? "text-emerald-500" : "text-rose-500"
+                }`}
+              >
+                {monthStats.net >= 0 ? "+" : ""}
+                {shortMoney(monthStats.net)} đ
+              </span>
+            </span>
+          </div>
+          <div className="mt-2 flex items-center justify-center gap-5 flex-wrap text-sm">
+            <span className="inline-flex items-center gap-1.5">
+              <ArrowUp className="w-4 h-4 text-emerald-500" />
+              <span className="text-muted-foreground">Thu:</span>
+              <span className="font-semibold tabular-nums text-emerald-500">
+                {shortMoney(monthStats.income)} đ
+              </span>
+            </span>
+            <span className="inline-flex items-center gap-1.5">
+              <ArrowDown className="w-4 h-4 text-rose-500" />
+              <span className="text-muted-foreground">Chi:</span>
+              <span className="font-semibold tabular-nums text-rose-500">
+                {shortMoney(monthStats.expense)} đ
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Action buttons */}
+      <div className="px-4 mt-4">
+        <div className="grid grid-cols-3 gap-3">
+          <ActionTile
+            icon={MinusCircle}
+            label="Chi"
+            tone="rose"
+            onClick={() => navigate("/transactions?add=1")}
+          />
+          <ActionTile
+            icon={PlusCircle}
+            label="Thu"
+            tone="emerald"
+            onClick={() => navigate("/transactions?add=1")}
+          />
+          <ActionTile
+            icon={ArrowLeftRight}
+            label="Chuyển"
+            tone="sky"
+            onClick={() => navigate("/transactions?add=1")}
+          />
+        </div>
+      </div>
+
+      {/* Calendar panel */}
+      <div className="px-4 mt-5">
+        <div className="rounded-3xl border border-border/60 bg-card/60 backdrop-blur-sm p-4 sm:p-5">
+          <h2 className="text-base font-semibold mb-4">Lịch giao dịch</h2>
+
+          {/* Month nav */}
+          <div className="flex items-center justify-between mb-3">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-9 w-9 rounded-full bg-foreground/[0.04] border border-border/60 hover:bg-foreground/[0.08]"
+              onClick={previousMonth}
+              aria-label="Tháng trước"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </Button>
+            <div className="text-center">
+              <p className="text-lg font-semibold capitalize leading-none">
+                {monthLabel}
+              </p>
+              <p className="text-xs text-muted-foreground mt-1">Năm {year}</p>
+            </div>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-9 w-9 rounded-full bg-foreground/[0.04] border border-border/60 hover:bg-foreground/[0.08]"
+              onClick={nextMonth}
+              aria-label="Tháng sau"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </Button>
+          </div>
+
+          {/* Weekdays */}
+          <div className="grid grid-cols-7 text-center mt-2 mb-1">
+            {["T2", "T3", "T4", "T5", "T6", "T7", "CN"].map((d) => (
+              <div
+                key={d}
+                className="text-[11px] font-medium text-muted-foreground py-1.5"
+              >
                 {d}
               </div>
             ))}
           </div>
 
-          <div className="grid grid-cols-7 gap-1">
-            {Array.from({ length: leadingEmpty }).map((_, index) => (
-              <div
-                key={`lead-${index}`}
-                className="min-h-[4.5rem] rounded-lg bg-slate-950/30 border border-transparent"
-              />
-            ))}
-            {Array.from({ length: daysInMonth }).map((_, i) => {
-              const day = i + 1;
-              const { expense, income, net } = getDayTotals(day);
-              const hasActivity = expense > 0 || income > 0;
-              const isSelected = selectedDay === day;
-              const today = isToday(day);
+          {/* Day cells */}
+          <div className="grid grid-cols-7 gap-y-1">
+            {cells.map((cell) => {
+              if (!cell.inMonth) {
+                return (
+                  <div
+                    key={cell.key}
+                    className="h-14 flex flex-col items-center justify-center text-muted-foreground/50 select-none"
+                  >
+                    <span className="text-[15px] font-medium">{cell.day}</span>
+                  </div>
+                );
+              }
 
-              const dotClass =
-                expense > 0
-                  ? "bg-rose-500"
-                  : income > 0
-                    ? "bg-emerald-500"
-                    : "bg-sky-400";
+              const { expense, income } = getDayTotals(cell.day);
+              const isSelected = selectedDay === cell.day;
+              const today = isToday(cell.day);
+
+              let secondary: { text: string; tone: string } | null = null;
+              if (expense > 0) {
+                secondary = {
+                  text: `−${shortMoney(expense)}`,
+                  tone: isSelected ? "text-white/85" : "text-rose-500",
+                };
+              } else if (income > 0) {
+                secondary = {
+                  text: `+${shortMoney(income)}`,
+                  tone: isSelected ? "text-white/85" : "text-emerald-500",
+                };
+              }
 
               return (
                 <button
-                  key={day}
+                  key={cell.key}
                   type="button"
-                  onClick={() => setSelectedDay(day)}
-                  className={`min-h-[4.5rem] rounded-lg border p-1 flex flex-col items-center justify-start gap-0.5 transition-all text-left ${
+                  onClick={() => setSelectedDay(cell.day)}
+                  className={`h-14 mx-0.5 flex flex-col items-center justify-center rounded-xl transition-colors ${
                     isSelected
-                      ? "border-cyan-400 ring-1 ring-cyan-400/50 bg-slate-800"
+                      ? "bg-emerald-600 text-white shadow-[0_6px_18px_rgba(16,185,129,0.35)]"
                       : today
-                        ? "border-amber-500/60 bg-amber-500/10"
-                        : "border-slate-700 bg-slate-800/50 hover:bg-slate-800"
+                        ? "bg-emerald-500/10 ring-1 ring-emerald-500/40 text-foreground"
+                        : "text-foreground hover:bg-foreground/[0.05]"
                   }`}
                 >
                   <span
-                    className={`text-xs font-semibold ${
-                      today ? "text-amber-200" : "text-slate-200"
+                    className={`text-[15px] leading-none ${
+                      isSelected ? "font-bold" : "font-medium"
                     }`}
                   >
-                    {day}
+                    {cell.day}
                   </span>
-                  <div className="flex items-center gap-0.5 w-full justify-center mt-0.5">
-                    <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${dotClass}`} />
+                  {secondary ? (
                     <span
-                      className={`text-[10px] leading-tight font-medium tabular-nums ${
-                        expense > 0 ? "text-rose-300" : "text-slate-500"
-                      }`}
+                      className={`mt-1 text-[10px] leading-none tabular-nums ${secondary.tone}`}
                     >
-                      {expense > 0 ? `−${shortMoney(expense)}` : shortMoney(0)}
+                      {secondary.text}
                     </span>
-                  </div>
-                  {hasActivity && net !== 0 && (
-                    <span
-                      className={`text-[9px] leading-none tabular-nums ${
-                        net >= 0 ? "text-emerald-400/90" : "text-amber-400"
-                      }`}
-                    >
-                      {net >= 0 ? "+" : ""}
-                      {shortMoney(net)}
+                  ) : (
+                    <span className="mt-1 text-[10px] leading-none text-muted-foreground/40">
+                      ·
                     </span>
                   )}
                 </button>
               );
             })}
-            {Array.from({ length: trailingCells }).map((_, index) => (
-              <div
-                key={`trail-${index}`}
-                className="min-h-[4.5rem] rounded-lg bg-slate-950/30 border border-transparent"
-              />
-            ))}
           </div>
-        </Card>
-
-        <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 mt-3 text-[10px] text-slate-500">
-          <span className="flex items-center gap-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-sky-400" />
-            Không chi
-          </span>
-          <span className="flex items-center gap-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-rose-500" />
-            Có chi tiêu
-          </span>
-          <span className="flex items-center gap-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-            Có thu
-          </span>
         </div>
       </div>
 
+      {/* Selected day detail */}
       <div className="px-4 mt-6">
-        <Card className="p-4 bg-slate-900 border-slate-800">
-          <h2 className="text-sm font-semibold text-slate-100 mb-3">Tổng kết tháng</h2>
-          <div className="grid grid-cols-3 gap-3 text-center">
-            <div>
-              <p className="text-[11px] text-slate-400 mb-1">Thu nhập</p>
-              <p className="text-sm font-medium text-emerald-400">
-                {formatCurrency(monthStats.income)}
-              </p>
-            </div>
-            <div>
-              <p className="text-[11px] text-slate-400 mb-1">Chi tiêu</p>
-              <p className="text-sm font-medium text-rose-400">
-                {formatCurrency(monthStats.expense)}
-              </p>
-            </div>
-            <div>
-              <p className="text-[11px] text-slate-400 mb-1">Chênh lệch</p>
-              <p
-                className={`text-sm font-medium ${monthStats.net >= 0 ? "text-emerald-400" : "text-amber-400"}`}
-              >
-                {monthStats.net >= 0 ? "+" : "−"}
-                {formatCurrency(Math.abs(monthStats.net))}
-              </p>
-            </div>
-          </div>
-          <div className="mt-3 pt-3 border-t border-slate-800 flex items-center justify-between text-sm">
-            <span className="text-slate-400">Số dư tháng (thu − chi)</span>
-            <span
-              className={`font-semibold tabular-nums ${monthStats.net >= 0 ? "text-emerald-400" : "text-amber-400"}`}
-            >
-              {monthStats.net >= 0 ? "+" : "−"}
-              {formatCurrency(Math.abs(monthStats.net))}
-            </span>
-          </div>
-        </Card>
-      </div>
-
-      <div className="px-4 mt-6">
-        <h2 className="text-lg mb-2 text-slate-100">
+        <h2 className="text-base font-semibold mb-2">
           Giao dịch ngày {selectedDay}/{month + 1}/{year}
         </h2>
         {selectedList.length === 0 ? (
-          <Card className="p-8 text-center text-slate-400 bg-slate-900 border-slate-800">
-            <p>Không có giao dịch trong ngày này</p>
+          <div className="rounded-2xl border border-border/60 bg-card/60 p-8 text-center text-muted-foreground">
+            <p className="text-sm">Không có giao dịch trong ngày này</p>
             <Button
               variant="outline"
-              className="mt-4 border-slate-600"
+              className="mt-4 h-10 text-sm"
               onClick={() => navigate("/transactions?add=1")}
             >
               Thêm giao dịch
             </Button>
-          </Card>
+          </div>
         ) : (
-          <Card className="divide-y divide-slate-800 bg-slate-900 border-slate-800">
+          <div className="rounded-2xl border border-border/60 bg-card/60 divide-y divide-border/60 overflow-hidden">
             {selectedList.map((transaction) => (
-              <div key={transaction.id} className="p-4 flex items-center justify-between">
+              <div
+                key={transaction.id}
+                className="p-4 flex items-center justify-between"
+              >
                 <div>
-                  <p className="text-sm mb-1 text-slate-100">{transaction.description}</p>
-                  <p className="text-xs text-slate-400">{transaction.category}</p>
+                  <p className="text-sm font-medium">{transaction.description}</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    {transaction.category}
+                  </p>
                 </div>
                 <p
-                  className={`text-sm font-medium ${
-                    transaction.type === "income" ? "text-emerald-400" : "text-rose-400"
+                  className={`text-sm font-semibold tabular-nums ${
+                    transaction.type === "income"
+                      ? "text-emerald-500"
+                      : "text-rose-500"
                   }`}
                 >
                   {transaction.type === "income" ? "+" : "−"}
@@ -288,9 +349,52 @@ export function Calendar() {
                 </p>
               </div>
             ))}
-          </Card>
+          </div>
         )}
       </div>
     </div>
+  );
+}
+
+type Tone = "rose" | "emerald" | "sky";
+
+interface ActionTileProps {
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+  tone: Tone;
+  onClick: () => void;
+}
+
+function ActionTile({ icon: Icon, label, tone, onClick }: ActionTileProps) {
+  const toneClasses: Record<Tone, { border: string; text: string; glow: string; bg: string }> = {
+    rose: {
+      border: "border-rose-500/35",
+      text: "text-rose-500",
+      glow: "shadow-[0_0_24px_rgba(244,63,94,0.18)]",
+      bg: "bg-rose-500/[0.06]",
+    },
+    emerald: {
+      border: "border-emerald-500/35",
+      text: "text-emerald-500",
+      glow: "shadow-[0_0_24px_rgba(16,185,129,0.20)]",
+      bg: "bg-emerald-500/[0.06]",
+    },
+    sky: {
+      border: "border-sky-500/35",
+      text: "text-sky-500",
+      glow: "shadow-[0_0_24px_rgba(14,165,233,0.18)]",
+      bg: "bg-sky-500/[0.06]",
+    },
+  };
+  const c = toneClasses[tone];
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`h-16 rounded-2xl border ${c.border} ${c.bg} ${c.glow} flex flex-col items-center justify-center gap-1 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]`}
+    >
+      <Icon className={`w-5 h-5 ${c.text}`} />
+      <span className={`text-sm font-semibold ${c.text}`}>{label}</span>
+    </button>
   );
 }

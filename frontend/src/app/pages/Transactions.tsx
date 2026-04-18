@@ -131,17 +131,17 @@ export function Transactions() {
     const iconName = categories.find((c) => c.name === categoryName)?.icon;
     switch (iconName) {
       case "utensils":
-        return <UtensilsCrossed className="w-4 h-4 text-amber-300" />;
+        return <UtensilsCrossed className="w-4 h-4 text-emerald-300" />;
       case "shopping-bag":
-        return <ShoppingBag className="w-4 h-4 text-violet-300" />;
+        return <ShoppingBag className="w-4 h-4 text-emerald-300" />;
       case "car":
-        return <Car className="w-4 h-4 text-cyan-300" />;
+        return <Car className="w-4 h-4 text-emerald-300" />;
       case "film":
         return <Film className="w-4 h-4 text-pink-300" />;
       case "home":
         return <House className="w-4 h-4 text-emerald-300" />;
       case "heart":
-        return <HeartPulse className="w-4 h-4 text-rose-300" />;
+        return <HeartPulse className="w-4 h-4 text-emerald-300" />;
       case "book":
         return <BookOpen className="w-4 h-4 text-indigo-300" />;
       case "wallet":
@@ -166,12 +166,12 @@ export function Transactions() {
   return (
     <div className="max-w-md mx-auto min-h-screen pb-6">
       {/* Header */}
-      <div className="bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 text-slate-100 p-6 border-b border-slate-800">
+      <div className="px-5 pt-5 pb-4">
         <div className="flex items-center gap-3 mb-6">
           <Button
             variant="ghost"
             size="icon"
-            className="text-white hover:bg-white/20"
+            className="text-foreground hover:bg-foreground/10"
             onClick={() => navigate("/")}
           >
             <ChevronLeft className="w-6 h-6" />
@@ -249,10 +249,14 @@ export function Transactions() {
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className={`text-sm mb-1 ${
-                        transaction.type === "income" ? "text-emerald-300" : "text-rose-300"
-                      }`}>
-                        {transaction.type === "income" ? "+" : "-"}
+                      <p
+                        className={`text-sm mb-1 font-semibold tabular-nums ${
+                          transaction.type === "income"
+                            ? "text-emerald-500"
+                            : "text-rose-500"
+                        }`}
+                      >
+                        {transaction.type === "income" ? "+" : "−"}
                         {formatCurrency(transaction.amount)}
                       </p>
                       <div className="flex gap-1">
@@ -267,7 +271,7 @@ export function Transactions() {
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="h-7 w-7 text-red-600"
+                          className="h-7 w-7 text-emerald-500"
                           onClick={() => handleDelete(transaction.id)}
                         >
                           <Trash2 className="w-4 h-4" />

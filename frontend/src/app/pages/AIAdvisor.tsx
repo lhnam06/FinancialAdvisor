@@ -75,7 +75,7 @@ export function AIAdvisor() {
 • Lợi nhuận trung bình: 8-12%/năm
 • Rủi ro: Trung bình
 
-💡 Khuyến nghị: Với mục tiêu tiết kiệm an toàn, nên ưu tiên tiết kiệm ngân hàng. Với mục tiêu sinh lời cao hơn, có thể cân nhắc chứng chỉ quỹ.`,
+Khuyến nghị: Với mục tiêu tiết kiệm an toàn, nên ưu tiên tiết kiệm ngân hàng. Với mục tiêu sinh lời cao hơn, có thể cân nhắc chứng chỉ quỹ.`,
 
     "tiết kiệm": `Dưới đây là những mẹo tiết kiệm hiệu quả:
 
@@ -97,22 +97,22 @@ export function AIAdvisor() {
 • Ghi chép mọi khoản chi tiêu
 • Xem lại và điều chỉnh hàng tháng
 
-💡 Bạn có thể tiết kiệm 15-20% thu nhập mỗi tháng nếu áp dụng đúng!`,
+Bạn có thể tiết kiệm 15-20% thu nhập mỗi tháng nếu áp dụng đúng!`,
 
     "lãi suất": `**Lãi suất tiết kiệm ngân hàng cập nhật (24/03/2026):**
 
-📈 **Cao nhất (kỳ hạn 12 tháng):**
+**Cao nhất (kỳ hạn 12 tháng):**
 1. BIDV: 5.0%/năm
 2. Vietcombank: 4.9%/năm
 3. VietinBank: 4.85%/năm
 4. Agribank: 4.8%/năm
 5. Techcombank: 4.7%/năm
 
-💰 **Ví dụ tính lãi:**
+**Ví dụ tính lãi:**
 Gửi 100 triệu VNĐ x 12 tháng tại BIDV (5%):
 • Lãi nhận được: 5 triệu VNĐ
 
-⚠️ **Lưu ý:**
+**Lưu ý:**
 • Lãi suất có thể thay đổi theo chính sách ngân hàng
 • Rút tiền trước hạn sẽ bị phạt
 • Nên so sánh nhiều ngân hàng trước khi gửi`,
@@ -124,15 +124,15 @@ Gửi 100 triệu VNĐ x 12 tháng tại BIDV (5%):
 • Danh mục chi nhiều nhất: Nhà cửa (2.500.000 VNĐ)
 
 **Phân tích:**
-✅ **Tốt:**
+**Tốt:**
 • Chi tiêu ăn uống kiểm soát tốt
 • Không có chi tiêu lãng phí
 
-⚠️ **Cần cải thiện:**
+**Cần cải thiện:**
 • Ngân sách ăn uống đã dùng 42%
 • Có thể tiết kiệm thêm bằng cách nấu ăn tại nhà
 
-💡 **Khuyến nghị:**
+**Khuyến nghị:**
 • Đặt giới hạn chi tiêu hàng tuần
 • Chuẩn bị bữa ăn trước để tiết kiệm
 • Theo dõi ngân sách thường xuyên hơn`,
@@ -200,14 +200,14 @@ Hãy đặt câu hỏi cụ thể hơn để tôi có thể tư vấn chính xá
   return (
     <div className="max-w-md mx-auto h-[100dvh] flex flex-col overflow-hidden">
       {/* Header */}
-      <div className="bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 text-slate-100 p-6 flex-shrink-0 border-b border-slate-800">
+      <div className="px-5 pt-5 pb-4 flex-shrink-0">
         <div className="flex items-center justify-between gap-3 mb-2">
           <Sheet open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
             <SheetTrigger asChild>
               <Button
                 variant="ghost"
                 size="icon"
-                className="text-white hover:bg-white/20"
+                className="text-foreground hover:bg-foreground/10"
                 aria-label="Mở menu hội thoại AI"
               >
                 <PanelLeft className="w-5 h-5" />
@@ -222,7 +222,7 @@ Hãy đặt câu hỏi cụ thể hơn để tôi có thể tư vấn chính xá
                   <SheetTitle className="text-slate-100">Lịch sử chat</SheetTitle>
                   <Button
                     size="sm"
-                    className="h-8 px-3 bg-cyan-500 text-slate-950 hover:bg-cyan-400"
+                    className="h-8 px-3 bg-emerald-500 text-slate-950 hover:bg-emerald-400"
                     onClick={() => setIsDrawerOpen(false)}
                   >
                     <Pencil className="w-3.5 h-3.5 mr-1.5" />
@@ -331,19 +331,19 @@ Hãy đặt câu hỏi cụ thể hơn để tôi có thể tư vấn chính xá
               <div
                 className={`max-w-[85%] rounded-2xl px-4 py-3 ${
                   message.type === "user"
-                    ? "bg-cyan-600 text-slate-950 rounded-br-sm"
+                    ? "bg-emerald-600 text-slate-950 rounded-br-sm"
                     : "bg-slate-900 text-slate-200 border border-slate-800 rounded-bl-sm"
                 }`}
               >
                 {message.type === "ai" && (
                   <div className="flex items-center gap-2 mb-2">
-                    <Sparkles className="w-4 h-4 text-cyan-300" />
-                    <span className="text-xs text-cyan-300">AI Assistant</span>
+                    <Sparkles className="w-4 h-4 text-emerald-300" />
+                    <span className="text-xs text-emerald-300">AI Assistant</span>
                   </div>
                 )}
                 <p className="text-sm whitespace-pre-wrap">{message.content}</p>
                 <p className={`text-xs mt-2 ${
-                  message.type === "user" ? "text-cyan-100" : "text-slate-500"
+                  message.type === "user" ? "text-emerald-100" : "text-slate-500"
                 }`}>
                   {message.timestamp.toLocaleTimeString("vi-VN", {
                     hour: "2-digit",
@@ -355,9 +355,12 @@ Hãy đặt câu hỏi cụ thể hơn để tôi có thể tư vấn chính xá
           ))}
 
           <Card className="p-3 bg-slate-900 border-slate-800">
-            <p className="text-xs text-slate-300">
-              💡 <strong>Lưu ý:</strong> Thông tin được cung cấp chỉ mang tính chất tham khảo.
-              Hãy tự nghiên cứu kỹ trước khi đưa ra quyết định tài chính.
+            <p className="text-xs text-slate-300 flex items-start gap-1.5">
+              <Lightbulb className="w-3.5 h-3.5 mt-0.5 text-emerald-300 flex-shrink-0" />
+              <span>
+                <strong>Lưu ý:</strong> Thông tin được cung cấp chỉ mang tính chất tham khảo.
+                Hãy tự nghiên cứu kỹ trước khi đưa ra quyết định tài chính.
+              </span>
             </p>
           </Card>
         </div>

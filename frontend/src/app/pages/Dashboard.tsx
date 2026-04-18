@@ -21,6 +21,7 @@ import {
   Wallet,
 } from "lucide-react";
 import { mockTransactions, mockBudgets, mockGoals, categories } from "../lib/mockData";
+import { ThemeToggle } from "../components/ThemeToggle";
 
 export function Dashboard() {
   const [transactions] = useState(mockTransactions);
@@ -103,9 +104,9 @@ export function Dashboard() {
     const value = expenseByDay.get(day) ?? 0;
     const ratio = value / maxDailyExpense;
     if (ratio === 0) return "bg-slate-900 text-slate-500 border border-slate-800";
-    if (ratio < 0.33) return "bg-cyan-900/40 text-cyan-200 border border-cyan-700/40";
-    if (ratio < 0.66) return "bg-cyan-700/40 text-cyan-100 border border-cyan-500/40";
-    return "bg-cyan-500/40 text-cyan-50 border border-cyan-300/40";
+    if (ratio < 0.33) return "bg-emerald-900/40 text-emerald-200 border border-emerald-700/40";
+    if (ratio < 0.66) return "bg-emerald-700/40 text-emerald-100 border border-emerald-500/40";
+    return "bg-emerald-500/40 text-emerald-50 border border-emerald-300/40";
   };
 
   const toPreviousMonth = () => {
@@ -124,17 +125,17 @@ export function Dashboard() {
     const iconName = categories.find((c) => c.name === categoryName)?.icon;
     switch (iconName) {
       case "utensils":
-        return <UtensilsCrossed className="w-4 h-4 text-amber-300" />;
+        return <UtensilsCrossed className="w-4 h-4 text-emerald-300" />;
       case "shopping-bag":
-        return <ShoppingBag className="w-4 h-4 text-violet-300" />;
+        return <ShoppingBag className="w-4 h-4 text-emerald-300" />;
       case "car":
-        return <Car className="w-4 h-4 text-cyan-300" />;
+        return <Car className="w-4 h-4 text-emerald-300" />;
       case "film":
         return <Film className="w-4 h-4 text-pink-300" />;
       case "home":
         return <House className="w-4 h-4 text-emerald-300" />;
       case "heart":
-        return <HeartPulse className="w-4 h-4 text-rose-300" />;
+        return <HeartPulse className="w-4 h-4 text-emerald-300" />;
       case "book":
         return <BookOpen className="w-4 h-4 text-indigo-300" />;
       case "wallet":
@@ -148,34 +149,46 @@ export function Dashboard() {
 
   return (
     <div className="max-w-md mx-auto min-h-screen">
-      <div className="bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 text-slate-100 p-6 rounded-b-3xl border-b border-slate-800 shadow-2xl">
+      <div className="px-5 pt-5 pb-4">
         <div className="mb-4">
-          <p className="text-sm text-slate-300">Xin chào,</p>
-          <h1 className="mt-2 font-signature text-4xl font-extrabold tracking-wide leading-none drop-shadow-[0_6px_18px_rgba(0,0,0,0.35)]">
-            Fainance
-          </h1>
-          <p className="mt-2 text-sm text-slate-300 leading-snug">
+          <div className="flex items-start justify-between">
+            <p className="text-sm text-muted-foreground">Xin chào,</p>
+            <ThemeToggle />
+          </div>
+          <div className="mt-2 flex items-center gap-3">
+            <img
+              src="/logo.svg"
+              alt="FAinance"
+              width={44}
+              height={44}
+              className="h-11 w-11 rounded-xl shadow-[0_6px_18px_rgba(16,185,129,0.35)] ring-1 ring-emerald-400/40"
+            />
+            <h1 className="font-signature text-4xl font-extrabold tracking-wide leading-none text-foreground">
+              Fainance
+            </h1>
+          </div>
+          <p className="mt-2 text-sm text-muted-foreground leading-snug">
             Theo dõi dòng tiền thông minh mỗi ngày
           </p>
         </div>
 
-        <Card className="bg-slate-900/70 backdrop-blur-sm border-slate-700 p-5 shadow-lg">
-          <p className="text-sm text-slate-300 mb-1">Tài sản ròng hiện tại</p>
-          <p className="text-3xl mb-4 text-cyan-300">{formatCurrency(balance)}</p>
+        <Card className="bg-slate-900/70 border-slate-700 p-5">
+          <p className="text-sm text-muted-foreground mb-1">Tài sản ròng hiện tại</p>
+          <p className="text-3xl mb-4 text-emerald-500 tabular-nums">{formatCurrency(balance)}</p>
           <div className="grid grid-cols-2 gap-4">
             <div>
               <div className="flex items-center gap-2 mb-1">
-                <TrendingUp className="w-4 h-4 text-emerald-400" />
-                <span className="text-sm text-slate-300">Thu nhập</span>
+                <TrendingUp className="w-4 h-4 text-emerald-500" />
+                <span className="text-sm text-muted-foreground">Thu nhập</span>
               </div>
-              <p className="text-lg text-emerald-300">{formatCurrency(totalIncome)}</p>
+              <p className="text-lg text-emerald-500 tabular-nums">{formatCurrency(totalIncome)}</p>
             </div>
             <div>
               <div className="flex items-center gap-2 mb-1">
-                <TrendingDown className="w-4 h-4 text-rose-400" />
-                <span className="text-sm text-slate-300">Chi tiêu</span>
+                <TrendingDown className="w-4 h-4 text-rose-500" />
+                <span className="text-sm text-muted-foreground">Chi tiêu</span>
               </div>
-              <p className="text-lg text-rose-300">{formatCurrency(totalExpense)}</p>
+              <p className="text-lg text-rose-500 tabular-nums">{formatCurrency(totalExpense)}</p>
             </div>
           </div>
         </Card>
@@ -184,7 +197,7 @@ export function Dashboard() {
       <div className="px-4 mt-6">
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-lg text-slate-100">Lịch chi tiêu</h2>
-          <Link to="/calendar" className="text-cyan-300 text-sm flex items-center gap-1">
+          <Link to="/calendar" className="text-emerald-300 text-sm flex items-center gap-1">
             Mở lịch đầy đủ <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
@@ -229,7 +242,7 @@ export function Dashboard() {
                   key={day}
                   type="button"
                   onClick={() => setSelectedDay(day)}
-                  className={`h-10 rounded-md text-sm font-medium transition-all ${getDayIntensity(day)} ${isSelected ? "ring-2 ring-cyan-300 ring-offset-2 ring-offset-slate-900" : ""}`}
+                  className={`h-10 rounded-md text-sm font-medium transition-all ${getDayIntensity(day)} ${isSelected ? "ring-2 ring-emerald-300 ring-offset-2 ring-offset-slate-900" : ""}`}
                 >
                   {day}
                 </button>
@@ -240,25 +253,25 @@ export function Dashboard() {
           <div className="grid grid-cols-2 gap-3 mt-4">
             <div className="rounded-lg border border-slate-800 bg-slate-950 p-3">
               <p className="text-xs text-slate-400">Tổng chi tháng</p>
-              <p className="text-sm text-rose-300 mt-1">{formatCurrency(monthlyExpense)}</p>
+              <p className="text-sm text-rose-400 mt-1 tabular-nums">{formatCurrency(monthlyExpense)}</p>
             </div>
             <div className="rounded-lg border border-slate-800 bg-slate-950 p-3">
               <p className="text-xs text-slate-400">Ngày có giao dịch</p>
-              <p className="text-sm text-cyan-200 mt-1">{activeExpenseDays} ngày</p>
+              <p className="text-sm text-emerald-200 mt-1">{activeExpenseDays} ngày</p>
             </div>
           </div>
 
           <div className="mt-4 rounded-lg border border-slate-800 bg-slate-950 p-3">
             <div className="flex items-center justify-between mb-2">
               <p className="text-sm text-slate-300">Chi tiết ngày {selectedDay}</p>
-              <p className="text-sm text-rose-300">{formatCurrency(selectedDateExpense)}</p>
+              <p className="text-sm text-rose-400 tabular-nums">−{formatCurrency(selectedDateExpense)}</p>
             </div>
             {selectedDateTransactions.length > 0 ? (
               <div className="space-y-2">
                 {selectedDateTransactions.slice(0, 3).map((item) => (
                   <div key={item.id} className="flex items-center justify-between text-sm">
                     <span className="text-slate-300">{item.description}</span>
-                    <span className="text-rose-300">{formatCurrency(item.amount)}</span>
+                    <span className="text-rose-400 tabular-nums">−{formatCurrency(item.amount)}</span>
                   </div>
                 ))}
               </div>
@@ -272,7 +285,7 @@ export function Dashboard() {
       <div className="px-4 mt-6">
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-xl font-semibold text-slate-100">Ngân sách tháng này</h2>
-          <Link to="/budget" className="text-cyan-300 text-sm flex items-center gap-1">
+          <Link to="/budget" className="text-emerald-300 text-sm flex items-center gap-1">
             Xem tất cả <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
@@ -284,7 +297,7 @@ export function Dashboard() {
           <div className="w-full bg-slate-800 rounded-full h-3 mb-3">
             <div
               className={`h-3 rounded-full transition-all ${
-                budgetPercentage > 90 ? "bg-rose-500" : budgetPercentage > 70 ? "bg-amber-500" : "bg-emerald-500"
+                budgetPercentage > 90 ? "bg-emerald-500" : budgetPercentage > 70 ? "bg-emerald-500" : "bg-emerald-500"
               }`}
               style={{ width: `${Math.min(budgetPercentage, 100)}%` }}
             />
@@ -306,7 +319,7 @@ export function Dashboard() {
       <div className="px-4 mt-6">
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-lg text-slate-100">Mục tiêu tiết kiệm</h2>
-          <Link to="/goals" className="text-cyan-300 text-sm flex items-center gap-1">
+          <Link to="/goals" className="text-emerald-300 text-sm flex items-center gap-1">
             Xem tất cả <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
@@ -322,11 +335,11 @@ export function Dashboard() {
                       {formatCurrency(goal.currentAmount)} / {formatCurrency(goal.targetAmount)}
                     </p>
                   </div>
-                  <Target className="w-5 h-5 text-cyan-300" />
+                  <Target className="w-5 h-5 text-emerald-300" />
                 </div>
                 <div className="w-full bg-slate-800 rounded-full h-2">
                   <div
-                    className="bg-cyan-400 h-2 rounded-full transition-all"
+                    className="bg-emerald-400 h-2 rounded-full transition-all"
                     style={{ width: `${Math.min(progress, 100)}%` }}
                   />
                 </div>
@@ -339,7 +352,7 @@ export function Dashboard() {
       <div className="px-4 mt-6 mb-6">
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-lg text-slate-100">Giao dịch gần đây</h2>
-          <Link to="/transactions" className="text-cyan-300 text-sm flex items-center gap-1">
+          <Link to="/transactions" className="text-emerald-300 text-sm flex items-center gap-1">
             Xem tất cả <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
@@ -348,7 +361,7 @@ export function Dashboard() {
             <div key={transaction.id} className="p-4 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                  transaction.type === "income" ? "bg-emerald-500/20" : "bg-rose-500/20"
+                  transaction.type === "income" ? "bg-emerald-500/20" : "bg-emerald-500/20"
                 }`}>
                   {getCategoryIcon(transaction.category)}
                 </div>
@@ -357,10 +370,12 @@ export function Dashboard() {
                   <p className="text-sm text-slate-400">{transaction.category}</p>
                 </div>
               </div>
-              <p className={`text-sm ${
-                transaction.type === "income" ? "text-emerald-300" : "text-rose-300"
-              }`}>
-                {transaction.type === "income" ? "+" : "-"}
+              <p
+                className={`text-sm font-semibold tabular-nums ${
+                  transaction.type === "income" ? "text-emerald-500" : "text-rose-500"
+                }`}
+              >
+                {transaction.type === "income" ? "+" : "−"}
                 {formatCurrency(transaction.amount)}
               </p>
             </div>
@@ -372,7 +387,7 @@ export function Dashboard() {
         <div className="grid grid-cols-2 gap-3">
           <Link to="/calendar">
             <Card className="p-4 hover:shadow-md transition-shadow bg-slate-900 border-slate-800 hover:bg-slate-800">
-              <CalendarIcon className="w-6 h-6 text-violet-300 mb-2" />
+              <CalendarIcon className="w-6 h-6 text-emerald-300 mb-2" />
               <p className="text-sm text-slate-100">Lịch tài chính</p>
             </Card>
           </Link>
@@ -392,7 +407,7 @@ export function Dashboard() {
         <div className="flex justify-end">
           <Link to="/transactions">
             <Button
-              className="w-14 h-14 rounded-full shadow-lg bg-cyan-500 hover:bg-cyan-400 text-slate-950"
+              className="w-14 h-14 rounded-full shadow-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950"
               size="icon"
             >
               <Plus className="w-6 h-6" />

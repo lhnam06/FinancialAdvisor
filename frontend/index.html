@@ -4,8 +4,33 @@
     <head>
       <meta charset="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <title>Flowlystic</title>
-    </head>
+    <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+    <meta name="theme-color" content="#064e3b" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <title>FAinance</title>
+      <script>
+        (function () {
+          try {
+            var key = "fainance:theme";
+            var stored = localStorage.getItem(key);
+            var prefersLight =
+              window.matchMedia &&
+              window.matchMedia("(prefers-color-scheme: light)").matches;
+            var theme =
+              stored === "light" || stored === "dark"
+                ? stored
+                : prefersLight
+                ? "light"
+                : "dark";
+            var root = document.documentElement;
+            root.classList.toggle("dark", theme === "dark");
+            root.classList.toggle("light", theme === "light");
+            root.style.colorScheme = theme;
+            root.setAttribute("data-theme", theme);
+          } catch (e) {}
+        })();
+      </script>
 
     <body>
       <div id="root"></div>

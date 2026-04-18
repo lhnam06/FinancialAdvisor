@@ -4,7 +4,15 @@ import { Card } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
 import { mockTransactions, categories } from "../lib/mockData";
-import { ChevronLeft, TrendingUp, TrendingDown, DollarSign } from "lucide-react";
+import {
+  ChevronLeft,
+  TrendingUp,
+  TrendingDown,
+  DollarSign,
+  Lightbulb,
+  CheckCircle2,
+  AlertTriangle,
+} from "lucide-react";
 import { Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend, LineChart, Line, CartesianGrid } from "recharts";
 
 export function Reports() {
@@ -108,12 +116,12 @@ export function Reports() {
   return (
     <div className="max-w-md mx-auto min-h-screen pb-6">
       {/* Header */}
-      <div className="bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 text-slate-100 p-6 border-b border-slate-800">
+      <div className="px-5 pt-5 pb-4">
         <div className="flex items-center gap-3 mb-6">
           <Button
             variant="ghost"
             size="icon"
-            className="h-11 w-11 text-white hover:bg-white/20"
+            className="h-11 w-11 text-foreground hover:bg-foreground/10"
             onClick={() => navigate("/")}
           >
             <ChevronLeft className="w-6 h-6" />
@@ -125,24 +133,24 @@ export function Reports() {
         <div className="grid grid-cols-3 gap-3">
           <Card className="bg-slate-900/70 backdrop-blur-sm border-slate-700 p-4">
             <div className="flex items-center gap-2 mb-1">
-              <TrendingUp className="w-4 h-4" />
+              <TrendingUp className="w-4 h-4 text-emerald-400" />
               <p className="text-xs opacity-90">Thu nhập</p>
             </div>
-            <p className="text-lg">{shortFormatCurrency(totalIncome)}</p>
+            <p className="text-lg text-emerald-300 tabular-nums">{shortFormatCurrency(totalIncome)}</p>
           </Card>
           <Card className="bg-slate-900/70 backdrop-blur-sm border-slate-700 p-4">
             <div className="flex items-center gap-2 mb-1">
-              <TrendingDown className="w-4 h-4" />
+              <TrendingDown className="w-4 h-4 text-rose-400" />
               <p className="text-xs opacity-90">Chi tiêu</p>
             </div>
-            <p className="text-lg">{shortFormatCurrency(totalExpense)}</p>
+            <p className="text-lg text-rose-300 tabular-nums">{shortFormatCurrency(totalExpense)}</p>
           </Card>
           <Card className="bg-slate-900/70 backdrop-blur-sm border-slate-700 p-4">
             <div className="flex items-center gap-2 mb-1">
-              <DollarSign className="w-4 h-4" />
+              <DollarSign className="w-4 h-4 text-sky-400" />
               <p className="text-xs opacity-90">Còn lại</p>
             </div>
-            <p className="text-lg">{shortFormatCurrency(balance)}</p>
+            <p className="text-lg text-sky-300 tabular-nums">{shortFormatCurrency(balance)}</p>
           </Card>
         </div>
       </div>
@@ -374,9 +382,9 @@ export function Reports() {
                   </div>
                 </div>
 
-                <div className="p-3 bg-cyan-900/20 border border-cyan-700/30 rounded-lg">
+                <div className="p-3 bg-emerald-900/20 border border-emerald-700/30 rounded-lg">
                   <p className="text-sm text-slate-400 mb-1">Tỷ lệ tiết kiệm</p>
-                  <p className="text-lg text-blue-600">
+                  <p className="text-lg text-emerald-500">
                     {((balance / totalIncome) * 100).toFixed(1)}%
                   </p>
                   <p className="text-sm text-slate-400 mt-1">
@@ -391,26 +399,38 @@ export function Reports() {
 
       {/* Insights */}
       <div className="px-4 mt-6">
-        <h2 className="text-lg mb-3 text-slate-100">💡 Nhận xét</h2>
+        <h2 className="text-lg mb-3 text-slate-100 flex items-center gap-2">
+          <Lightbulb className="w-4 h-4 text-emerald-300" />
+          Nhận xét
+        </h2>
         <Card className="p-4 space-y-3 bg-slate-900 border-slate-800">
           <div className="p-3 bg-emerald-900/20 border border-emerald-700/30 rounded-lg">
-            <p className="text-sm mb-1">✅ Điểm tốt</p>
+            <p className="text-sm mb-1 flex items-center gap-1.5 text-emerald-200">
+              <CheckCircle2 className="w-4 h-4" />
+              Điểm tốt
+            </p>
             <p className="text-sm text-slate-300">
-              Tỷ lệ tiết kiệm của bạn rất tốt ({((balance / totalIncome) * 100).toFixed(1)}%), 
+              Tỷ lệ tiết kiệm của bạn rất tốt ({((balance / totalIncome) * 100).toFixed(1)}%),
               cao hơn mức khuyến nghị 20%
             </p>
           </div>
-          
-          <div className="p-3 bg-amber-900/20 border border-amber-700/30 rounded-lg">
-            <p className="text-sm mb-1">⚠️ Cần lưu ý</p>
+
+          <div className="p-3 bg-emerald-900/20 border border-emerald-700/30 rounded-lg">
+            <p className="text-sm mb-1 flex items-center gap-1.5 text-emerald-200">
+              <AlertTriangle className="w-4 h-4" />
+              Cần lưu ý
+            </p>
             <p className="text-sm text-slate-300">
               Chi phí nhà cửa chiếm {((2500000 / totalExpense) * 100).toFixed(0)}% tổng chi tiêu.
               Nên tìm cách tối ưu hóa chi phí sinh hoạt
             </p>
           </div>
 
-          <div className="p-3 bg-cyan-900/20 border border-cyan-700/30 rounded-lg">
-            <p className="text-sm mb-1">💡 Khuyến nghị</p>
+          <div className="p-3 bg-emerald-900/20 border border-emerald-700/30 rounded-lg">
+            <p className="text-sm mb-1 flex items-center gap-1.5 text-emerald-200">
+              <Lightbulb className="w-4 h-4" />
+              Khuyến nghị
+            </p>
             <p className="text-sm text-slate-300">
               Hãy tiếp tục duy trì thói quen tốt này! Bạn có thể cân nhắc đầu tư số tiền
               tiết kiệm vào các kênh sinh lời để tối ưu tài chính
