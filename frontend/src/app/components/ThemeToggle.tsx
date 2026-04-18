@@ -16,11 +16,11 @@ export function ThemeToggle({ className = "" }: ThemeToggleProps) {
       aria-label={isDark ? "Chuyển sang chế độ sáng" : "Chuyển sang chế độ tối"}
       title={isDark ? "Chế độ sáng" : "Chế độ tối"}
       className={
-        "group relative inline-flex h-10 w-10 items-center justify-center " +
+        "group relative inline-flex h-10 w-10 items-center justify-center touch-manipulation " +
         "rounded-full border border-foreground/15 bg-foreground/[0.06] text-foreground " +
         "backdrop-blur-md shadow-[0_6px_18px_rgba(0,0,0,0.15)] " +
         "transition-all duration-300 hover:bg-foreground/[0.12] hover:scale-[1.04] " +
-        "active:scale-95 " +
+        "active:scale-95 motion-reduce:hover:scale-100 motion-reduce:active:scale-100 " +
         className
       }
     >

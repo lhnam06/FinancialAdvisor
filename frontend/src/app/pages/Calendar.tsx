@@ -1,5 +1,4 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router";
 import { Card } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import {
@@ -28,6 +27,20 @@ type UiTransaction = {
   date: string;
 };
 
+type CalendarDayCell =
+  | null
+  | {
+      day: number;
+      date: string;
+      data: {
+        date: string;
+        income_minor: number;
+        expense_minor: number;
+        net_minor: number;
+        transaction_count: number;
+      } | null;
+    };
+
 function mapApiTransaction(item: ApiTransaction): UiTransaction {
   return {
     id: item.id,
@@ -40,8 +53,6 @@ function mapApiTransaction(item: ApiTransaction): UiTransaction {
 }
 
 export function Calendar() {
-  const navigate = useNavigate();
-
   const today = new Date();
   const [currentMonth, setCurrentMonth] = useState(today.toISOString().slice(0, 7));
   const [selectedDate, setSelectedDate] = useState(today.toISOString().slice(0, 10));
@@ -162,8 +173,8 @@ export function Calendar() {
     return map;
   }, [monthData]);
 
-  const calendarDays = useMemo(() => {
-    const days = [];
+  const calendarDays = useMemo((): CalendarDayCell[] => {
+    const days: CalendarDayCell[] = [];
 
     for (let i = 0; i < firstDayOfMonth; i += 1) {
       days.push(null);
@@ -243,24 +254,12 @@ export function Calendar() {
 
   return (
     <div className="max-w-md mx-auto min-h-screen pb-6">
-      <div className="bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 text-slate-100 p-6 border-b border-slate-800">
-        <div className="flex items-center gap-3 mb-6">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-11 w-11 text-white hover:bg-white/20"
-            onClick={() => navigate("/")}
-          >
-            <ChevronLeft className="w-6 h-6" />
-          </Button>
-          <h1 className="text-2xl font-semibold">Lịch chi tiêu</h1>
-        </div>
-
+      <div className="px-4 pt-3 pb-4 text-foreground border-b border-border">
         <div className="flex items-center justify-between">
           <Button
             variant="outline"
             size="icon"
-            className="border-slate-700 bg-slate-900 text-slate-100 hover:bg-slate-800"
+            className="border-border bg-card text-foreground hover:bg-muted"
             onClick={goToPreviousMonth}
           >
             <ChevronLeft className="w-4 h-4" />
@@ -269,7 +268,7 @@ export function Calendar() {
           <Button
             variant="outline"
             size="icon"
-            className="border-slate-700 bg-slate-900 text-slate-100 hover:bg-slate-800"
+            className="border-border bg-card text-foreground hover:bg-muted"
             onClick={goToNextMonth}
           >
             <ChevronRight className="w-4 h-4" />

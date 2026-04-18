@@ -4,36 +4,35 @@
   --font-size: 17px;
   --safe-top: env(safe-area-inset-top);
   --safe-bottom: env(safe-area-inset-bottom);
-  --background: #eef2f7;
+  --background: #f0f3f7;
   --foreground: #0f172a;
   --app-bg:
-    radial-gradient(1200px 720px at 8% -12%, rgba(16, 185, 129, 0.18), transparent 62%),
-    radial-gradient(900px 560px at 100% 0%, rgba(59, 130, 246, 0.14), transparent 60%),
-    radial-gradient(800px 520px at 50% 110%, rgba(139, 92, 246, 0.12), transparent 62%),
-    radial-gradient(600px 420px at 110% 60%, rgba(14, 165, 233, 0.10), transparent 60%),
-    linear-gradient(180deg, #f6f8fb 0%, #eef2f7 55%, #e6ebf3 100%);
-  --app-bg-overlay: rgba(255, 255, 255, 0.02);
-  --app-noise-opacity: 0.28;
+    radial-gradient(880px 520px at 0% -8%, rgba(16, 185, 129, 0.075), transparent 58%),
+    radial-gradient(720px 440px at 100% 0%, rgba(37, 99, 235, 0.055), transparent 62%),
+    radial-gradient(640px 480px at 50% 105%, rgba(124, 58, 237, 0.045), transparent 68%),
+    linear-gradient(180deg, #fafcfd 0%, #f0f3f7 48%, #e7ebf1 100%);
+  --app-bg-overlay: rgba(255, 255, 255, 0.42);
+  --app-noise-opacity: 0.11;
   --card: #ffffff;
   --card-foreground: #0f172a;
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
   --primary: #2563eb;
   --primary-foreground: #ffffff;
-  --secondary: #e2e8f0;
+  --secondary: #e5eaf0;
   --secondary-foreground: #0f172a;
-  --muted: #e2e8f0;
-  --muted-foreground: #64748b;
+  --muted: #e8ecf2;
+  --muted-foreground: #5a6a7e;
   --accent: #dbeafe;
   --accent-foreground: #1e3a8a;
   --destructive: #d4183d;
   --destructive-foreground: #ffffff;
-  --border: rgba(15, 23, 42, 0.1);
+  --border: rgba(15, 23, 42, 0.085);
   --input: transparent;
-  --input-background: #f3f3f5;
+  --input-background: #f7f8fa;
   --switch-background: #cbced4;
-  --font-weight-medium: 600;
-  --font-weight-normal: 500;
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
   --ring: oklch(0.708 0 0);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
@@ -76,8 +75,8 @@
   --border: rgba(34, 197, 94, 0.35);
   --input: #052e16;
   --ring: #22c55e;
-  --font-weight-medium: 600;
-  --font-weight-normal: 500;
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
   --chart-1: oklch(0.73 0.2 145);
   --chart-2: oklch(0.66 0.16 150);
   --chart-3: oklch(0.58 0.14 152);
@@ -155,6 +154,8 @@
     overscroll-behavior-y: none;
     -webkit-tap-highlight-color: transparent;
     transition: background-color 400ms ease, color 300ms ease;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   body::before {
@@ -193,29 +194,36 @@
 
   html {
     font-size: var(--font-size);
+    scroll-behavior: smooth;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
   }
 
   h1 {
     font-size: var(--text-2xl);
-    font-weight: 700;
+    font-weight: var(--font-weight-medium);
     line-height: 1.5;
   }
 
   h2 {
     font-size: var(--text-xl);
-    font-weight: 700;
+    font-weight: var(--font-weight-medium);
     line-height: 1.5;
   }
 
   h3 {
     font-size: var(--text-lg);
-    font-weight: 600;
+    font-weight: var(--font-weight-medium);
     line-height: 1.5;
   }
 
   h4 {
     font-size: var(--text-base);
-    font-weight: 600;
+    font-weight: var(--font-weight-medium);
     line-height: 1.5;
   }
 
@@ -248,41 +256,76 @@
     color-scheme: dark;
   }
 
-  /* ----- Unify slate surfaces to the Calendar panel look -----
-   *
-   * Calendar uses `bg-card/60 border-border/60 backdrop-blur-sm`.
-   * Route the hardcoded slate utilities through the same `--card` /
-   * `--border` theme tokens so every card takes that exact tint in
-   * both themes. Elements inside `.hero-dark` keep their original look.
-   * ------------------------------------------------------------- */
+  /* ----- Slate surfaces: solid cards in light, glassy panels in dark ----- */
 
-  :is(.light, .dark) .bg-slate-900:not(.hero-dark):not(.hero-dark *),
-  :is(.light, .dark) .bg-slate-900\/40:not(.hero-dark):not(.hero-dark *),
-  :is(.light, .dark) .bg-slate-900\/50:not(.hero-dark):not(.hero-dark *),
-  :is(.light, .dark) .bg-slate-900\/60:not(.hero-dark):not(.hero-dark *),
-  :is(.light, .dark) .bg-slate-900\/70:not(.hero-dark):not(.hero-dark *),
-  :is(.light, .dark) .bg-slate-900\/80:not(.hero-dark):not(.hero-dark *),
-  :is(.light, .dark) .bg-slate-900\/90:not(.hero-dark):not(.hero-dark *) {
+  .light .bg-slate-900:not(.hero-dark):not(.hero-dark *),
+  .light .bg-slate-900\/40:not(.hero-dark):not(.hero-dark *),
+  .light .bg-slate-900\/50:not(.hero-dark):not(.hero-dark *),
+  .light .bg-slate-900\/60:not(.hero-dark):not(.hero-dark *),
+  .light .bg-slate-900\/70:not(.hero-dark):not(.hero-dark *),
+  .light .bg-slate-900\/80:not(.hero-dark):not(.hero-dark *),
+  .light .bg-slate-900\/90:not(.hero-dark):not(.hero-dark *) {
+    background-color: var(--card) !important;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    box-shadow:
+      0 1px 2px rgba(15, 23, 42, 0.04),
+      0 2px 8px rgba(15, 23, 42, 0.05);
+  }
+
+  .dark .bg-slate-900:not(.hero-dark):not(.hero-dark *),
+  .dark .bg-slate-900\/40:not(.hero-dark):not(.hero-dark *),
+  .dark .bg-slate-900\/50:not(.hero-dark):not(.hero-dark *),
+  .dark .bg-slate-900\/60:not(.hero-dark):not(.hero-dark *),
+  .dark .bg-slate-900\/70:not(.hero-dark):not(.hero-dark *),
+  .dark .bg-slate-900\/80:not(.hero-dark):not(.hero-dark *),
+  .dark .bg-slate-900\/90:not(.hero-dark):not(.hero-dark *) {
     background-color: color-mix(in oklab, var(--card) 60%, transparent) !important;
     backdrop-filter: blur(14px) saturate(1.2);
     -webkit-backdrop-filter: blur(14px) saturate(1.2);
   }
 
-  :is(.light, .dark) .bg-slate-950:not(.hero-dark):not(.hero-dark *),
-  :is(.light, .dark) .bg-slate-950\/70:not(.hero-dark):not(.hero-dark *),
-  :is(.light, .dark) .bg-slate-950\/80:not(.hero-dark):not(.hero-dark *),
-  :is(.light, .dark) .bg-slate-950\/90:not(.hero-dark):not(.hero-dark *) {
+  .light .bg-slate-950:not(.hero-dark):not(.hero-dark *),
+  .light .bg-slate-950\/60:not(.hero-dark):not(.hero-dark *),
+  .light .bg-slate-950\/70:not(.hero-dark):not(.hero-dark *),
+  .light .bg-slate-950\/80:not(.hero-dark):not(.hero-dark *),
+  .light .bg-slate-950\/90:not(.hero-dark):not(.hero-dark *) {
+    background-color: color-mix(in oklab, var(--muted) 42%, var(--card)) !important;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  .dark .bg-slate-950:not(.hero-dark):not(.hero-dark *),
+  .dark .bg-slate-950\/70:not(.hero-dark):not(.hero-dark *),
+  .dark .bg-slate-950\/80:not(.hero-dark):not(.hero-dark *),
+  .dark .bg-slate-950\/90:not(.hero-dark):not(.hero-dark *) {
     background-color: color-mix(in oklab, var(--card) 50%, transparent) !important;
     backdrop-filter: blur(10px) saturate(1.15);
     -webkit-backdrop-filter: blur(10px) saturate(1.15);
   }
 
-  :is(.light, .dark) .bg-slate-800:not(.hero-dark):not(.hero-dark *) {
+  .light .bg-slate-800:not(.hero-dark):not(.hero-dark *) {
+    background-color: var(--muted) !important;
+  }
+
+  .dark .bg-slate-800:not(.hero-dark):not(.hero-dark *) {
     background-color: color-mix(in oklab, var(--muted) 70%, transparent) !important;
   }
 
-  :is(.light, .dark) .hover\:bg-slate-800:not(.hero-dark):not(.hero-dark *):hover {
+  .light .hover\:bg-slate-800:not(.hero-dark):not(.hero-dark *):hover {
+    background-color: color-mix(in oklab, var(--muted) 88%, var(--foreground)) !important;
+  }
+
+  .dark .hover\:bg-slate-800:not(.hero-dark):not(.hero-dark *):hover {
     background-color: color-mix(in oklab, var(--muted) 90%, transparent) !important;
+  }
+
+  .light .hover\:bg-slate-800\/60:hover:not(.hero-dark):not(.hero-dark *) {
+    background-color: color-mix(in oklab, var(--muted) 72%, transparent) !important;
+  }
+
+  .light .hover\:bg-slate-900:hover:not(.hero-dark):not(.hero-dark *) {
+    background-color: color-mix(in oklab, var(--muted) 65%, var(--card)) !important;
   }
 
   :is(.light, .dark) .border-slate-700:not(.hero-dark):not(.hero-dark *),
@@ -301,12 +344,37 @@
   .light .text-slate-400:not(.hero-dark):not(.hero-dark *) { color: #475569 !important; }
   .light .text-slate-500:not(.hero-dark):not(.hero-dark *) { color: #64748b !important; }
   .light .text-slate-600:not(.hero-dark):not(.hero-dark *) { color: #64748b !important; }
+  .light .text-slate-700:not(.hero-dark):not(.hero-dark *) { color: #475569 !important; }
 
   /* Emerald accents need more contrast on a light canvas */
   .light .text-emerald-100:not(.hero-dark):not(.hero-dark *),
   .light .text-emerald-200:not(.hero-dark):not(.hero-dark *) { color: #065f46 !important; }
   .light .text-emerald-300:not(.hero-dark):not(.hero-dark *) { color: #047857 !important; }
   .light .text-emerald-400:not(.hero-dark):not(.hero-dark *) { color: #059669 !important; }
+
+  /* Calendar / stats: cyan selection & chips on white cards */
+  .light .text-cyan-100:not(.hero-dark):not(.hero-dark *) { color: #164e63 !important; }
+  .light .text-cyan-300:not(.hero-dark):not(.hero-dark *) { color: #0e7490 !important; }
+  .light .border-cyan-400:not(.hero-dark):not(.hero-dark *) { border-color: #0891b2 !important; }
+  .light .bg-cyan-500\/20:not(.hero-dark):not(.hero-dark *) {
+    background-color: color-mix(in oklab, #06b6d4 16%, transparent) !important;
+  }
+
+  /* Category / accent icon hues on light surfaces */
+  .light .text-amber-300:not(.hero-dark):not(.hero-dark *) { color: #b45309 !important; }
+  .light .text-pink-300:not(.hero-dark):not(.hero-dark *) { color: #be185d !important; }
+  .light .text-violet-300:not(.hero-dark):not(.hero-dark *) { color: #6d28d9 !important; }
+  .light .text-indigo-300:not(.hero-dark):not(.hero-dark *) { color: #4338ca !important; }
+  .light .text-sky-300:not(.hero-dark):not(.hero-dark *) { color: #0369a1 !important; }
+  .light .text-rose-300:not(.hero-dark):not(.hero-dark *) { color: #be123c !important; }
+
+  /* Reports / tips: dark-cyan panels → readable light callouts */
+  .light .bg-cyan-900\/20:not(.hero-dark):not(.hero-dark *) {
+    background-color: color-mix(in oklab, #0e7490 12%, var(--card)) !important;
+  }
+  .light .border-cyan-700\/30:not(.hero-dark):not(.hero-dark *) {
+    border-color: color-mix(in oklab, #0e7490 28%, transparent) !important;
+  }
 }
 
 @layer components {

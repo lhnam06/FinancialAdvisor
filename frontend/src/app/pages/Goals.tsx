@@ -1,5 +1,4 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router";
 import { Card } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
@@ -8,7 +7,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../components/
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
 import { Progress } from "../components/ui/progress";
 import {
-  ChevronLeft,
   Plus,
   Edit,
   Trash2,
@@ -101,8 +99,6 @@ function getGoalIcon(iconKey: string) {
 }
 
 export function Goals() {
-  const navigate = useNavigate();
-
   const [goals, setGoals] = useState<UiGoal[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -262,36 +258,24 @@ export function Goals() {
 
   return (
     <div className="max-w-md mx-auto min-h-screen pb-6">
-      <div className="bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 text-slate-100 p-6 border-b border-slate-800">
-        <div className="flex items-center gap-3 mb-6">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-11 w-11 text-white hover:bg-white/20"
-            onClick={() => navigate("/")}
-          >
-            <ChevronLeft className="w-6 h-6" />
-          </Button>
-          <h1 className="text-2xl font-semibold">Mục tiêu</h1>
-        </div>
-
-        <Card className="bg-slate-900/70 backdrop-blur-sm border-slate-700 p-5">
-          <p className="text-base text-slate-200 mb-1">Tổng tiến độ tiết kiệm</p>
+      <div className="px-4 pt-3 pb-4 text-foreground border-b border-border">
+        <Card className="p-5 bg-card border border-border text-card-foreground">
+          <p className="text-base text-muted-foreground mb-1">Tổng tiến độ tiết kiệm</p>
           <div className="flex items-baseline gap-2 mb-4">
-            <p className="text-2xl text-cyan-300">{formatCurrency(totalSaved)}</p>
-            <p className="text-base text-slate-300">/ {formatCurrency(totalTarget)}</p>
+            <p className="text-2xl text-primary">{formatCurrency(totalSaved)}</p>
+            <p className="text-base text-muted-foreground">/ {formatCurrency(totalTarget)}</p>
           </div>
-          <Progress value={Math.min(overallProgress, 100)} className="h-3 bg-slate-800 [&>div]:bg-cyan-400" />
-          <p className="text-sm text-slate-300 mt-3">
+          <Progress value={Math.min(overallProgress, 100)} className="h-3 bg-muted [&>div]:bg-primary" />
+          <p className="text-sm text-muted-foreground mt-3">
             Hoàn thành: {overallProgress.toFixed(0)}%
           </p>
         </Card>
       </div>
 
       <div className="px-4 mt-6 space-y-4">
-        <div className="sticky top-0 z-20 -mx-4 px-4 py-3 bg-slate-950/90 backdrop-blur-md border-b border-slate-800/80">
+        <div className="sticky top-0 z-20 -mx-4 px-4 py-3 bg-background/90 backdrop-blur-md border-b border-border">
           <div className="flex items-center justify-between">
-            <h2 className="text-xl font-semibold text-slate-100">Danh sách mục tiêu</h2>
+            <h2 className="text-xl font-semibold text-foreground">Danh sách mục tiêu</h2>
             <Button
               variant="outline"
               onClick={() => {

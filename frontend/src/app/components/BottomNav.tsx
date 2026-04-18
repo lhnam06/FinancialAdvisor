@@ -16,6 +16,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
+import { useLocale } from "../lib/locale";
 
 interface BottomNavProps {
   currentPath: string;
@@ -23,12 +24,13 @@ interface BottomNavProps {
 
 export function BottomNav({ currentPath }: BottomNavProps) {
   const [isQuickMenuOpen, setIsQuickMenuOpen] = useState(false);
+  const { t } = useLocale();
 
   const navItems = [
-    { path: "/", icon: Home, label: "Tổng quan", activeColor: "text-emerald-300" },
-    { path: "/budget", icon: PieChart, label: "Ngân sách", activeColor: "text-emerald-300" },
-    { path: "/reports", icon: BarChart3, label: "Báo cáo", activeColor: "text-emerald-300" },
-    { path: "/ai-advisor", icon: Bot, label: "AI", activeColor: "text-emerald-300" },
+    { path: "/", icon: Home, label: t("bottom.overview"), activeColor: "text-emerald-300" },
+    { path: "/budget", icon: PieChart, label: t("bottom.budget"), activeColor: "text-emerald-300" },
+    { path: "/reports", icon: BarChart3, label: t("bottom.reports"), activeColor: "text-emerald-300" },
+    { path: "/ai-advisor", icon: Bot, label: t("bottom.ai"), activeColor: "text-emerald-300" },
   ];
 
   return (
@@ -58,7 +60,7 @@ export function BottomNav({ currentPath }: BottomNavProps) {
             <Link
               key={item.path}
               to={item.path}
-              className={`relative z-10 flex flex-col items-center justify-center flex-1 h-[54px] mx-1 my-1 rounded-[1.35rem] border transition-all duration-200 ${
+              className={`relative z-10 flex flex-col items-center justify-center flex-1 h-[54px] mx-1 my-1 rounded-[1.35rem] border touch-manipulation transition-all duration-200 ease-out active:scale-[0.96] motion-reduce:active:scale-100 ${
                 isActive
                   ? "text-foreground bg-foreground/10 border-foreground/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.18)]"
                   : "text-foreground/80 border-transparent hover:text-foreground hover:bg-foreground/5"
@@ -74,7 +76,7 @@ export function BottomNav({ currentPath }: BottomNavProps) {
           <DropdownMenuTrigger asChild>
             <button
               type="button"
-              className={`relative z-10 flex flex-col items-center justify-center flex-1 h-[54px] mx-1 my-1 rounded-[1.35rem] border group transition-all ${
+              className={`relative z-10 flex flex-col items-center justify-center flex-1 h-[54px] mx-1 my-1 rounded-[1.35rem] border group touch-manipulation transition-all duration-200 ease-out active:scale-[0.96] motion-reduce:active:scale-100 ${
                 isQuickMenuOpen
                   ? "bg-foreground/10 border-foreground/20"
                   : "border-transparent hover:bg-foreground/5"
@@ -129,7 +131,7 @@ export function BottomNav({ currentPath }: BottomNavProps) {
             <Link
               key={item.path}
               to={item.path}
-              className={`relative z-10 flex flex-col items-center justify-center flex-1 h-[54px] mx-1 my-1 rounded-[1.35rem] border transition-all duration-200 ${
+              className={`relative z-10 flex flex-col items-center justify-center flex-1 h-[54px] mx-1 my-1 rounded-[1.35rem] border touch-manipulation transition-all duration-200 ease-out active:scale-[0.96] motion-reduce:active:scale-100 ${
                 isActive
                   ? "text-foreground bg-foreground/10 border-foreground/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.18)]"
                   : "text-foreground/80 border-transparent hover:text-foreground hover:bg-foreground/5"

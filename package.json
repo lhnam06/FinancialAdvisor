@@ -7,6 +7,8 @@
     "build:frontend": "npm --prefix frontend run build",
     "dev:backend": "npm --prefix backend run dev",
     "start:backend": "npm --prefix backend run start"
+  },
+  "dependencies": {
+    "lunar-javascript": "^1.7.7"
   }
 }
-

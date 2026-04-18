@@ -8,7 +8,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
 import { categories } from "../lib/mockData";
 import {
-  ChevronLeft,
   Camera,
   Mic,
   Upload,
@@ -18,9 +17,11 @@ import {
   PenLine,
 } from "lucide-react";
 import { toast } from "sonner";
+import { useLocale } from "../lib/locale";
 
 export function SmartInput() {
   const navigate = useNavigate();
+  const { t } = useLocale();
   const [searchParams] = useSearchParams();
   const initialMode = searchParams.get("mode") === "scan" ? "scan" : "voice";
 
@@ -142,22 +143,8 @@ export function SmartInput() {
 
   return (
     <div className="max-w-md mx-auto min-h-screen pb-6">
-      {/* Header */}
-      <div className="px-5 pt-5 pb-4">
-        <div className="flex items-center gap-3 mb-4">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="text-foreground hover:bg-foreground/10"
-            onClick={() => navigate("/")}
-          >
-            <ChevronLeft className="w-6 h-6" />
-          </Button>
-          <h1 className="text-2xl">Nhập liệu thông minh</h1>
-        </div>
-        <p className="text-sm text-muted-foreground">
-          Nhập giao dịch nhanh chóng bằng giọng nói hoặc quét hóa đơn
-        </p>
+      <div className="px-5 pt-3 pb-4">
+        <p className="text-sm text-muted-foreground">{t("smartInput.subtitle")}</p>
       </div>
 
       {/* Input Methods */}

@@ -10,7 +10,6 @@ import {
   Edit,
   Trash2,
   Search,
-  ChevronLeft,
   UtensilsCrossed,
   ShoppingBag,
   Car,
@@ -119,9 +118,12 @@ export function Transactions() {
 
   useEffect(() => {
     if (searchParams.get("add") !== "1") return;
+    const typeParam = searchParams.get("type");
+    const initialType: "income" | "expense" =
+      typeParam === "income" ? "income" : "expense";
     setEditingTransaction(null);
     setFormData({
-      type: "expense",
+      type: initialType,
       amount: "",
       categoryId: "",
       description: "",
@@ -239,26 +241,14 @@ export function Transactions() {
 
   return (
     <div className="max-w-md mx-auto min-h-screen pb-6">
-      <div className="bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 text-slate-100 p-6 border-b border-slate-800">
-        <div className="flex items-center gap-3 mb-6">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="text-white hover:bg-white/20"
-            onClick={() => navigate("/")}
-          >
-            <ChevronLeft className="w-6 h-6" />
-          </Button>
-          <h1 className="text-2xl">Giao dịch</h1>
-        </div>
-
+      <div className="px-4 pt-3 pb-4 text-foreground border-b border-border">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
           <Input
             placeholder="Tìm kiếm giao dịch..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 bg-slate-900/70 border-slate-700 text-slate-100 placeholder:text-slate-400"
+            className="pl-10 bg-muted border-border text-foreground placeholder:text-muted-foreground"
           />
         </div>
 
@@ -267,7 +257,7 @@ export function Transactions() {
             variant={filterType === "all" ? "secondary" : "outline"}
             size="sm"
             onClick={() => setFilterType("all")}
-            className={filterType === "all" ? "" : "bg-slate-900/70 text-slate-100 border-slate-700 hover:bg-slate-800"}
+            className={filterType === "all" ? "" : "border-border bg-card text-foreground hover:bg-muted"}
           >
             Tất cả
           </Button>
@@ -275,7 +265,7 @@ export function Transactions() {
             variant={filterType === "income" ? "secondary" : "outline"}
             size="sm"
             onClick={() => setFilterType("income")}
-            className={filterType === "income" ? "" : "bg-slate-900/70 text-slate-100 border-slate-700 hover:bg-slate-800"}
+            className={filterType === "income" ? "" : "border-border bg-card text-foreground hover:bg-muted"}
           >
             Thu nhập
           </Button>
@@ -283,7 +273,7 @@ export function Transactions() {
             variant={filterType === "expense" ? "secondary" : "outline"}
             size="sm"
             onClick={() => setFilterType("expense")}
-            className={filterType === "expense" ? "" : "bg-slate-900/70 text-slate-100 border-slate-700 hover:bg-slate-800"}
+            className={filterType === "expense" ? "" : "border-border bg-card text-foreground hover:bg-muted"}
           >
             Chi tiêu
           </Button>

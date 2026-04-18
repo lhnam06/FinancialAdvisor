@@ -3,10 +3,10 @@ import { useNavigate } from "react-router";
 import { Card } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import {
+  ChevronLeft,
   ChevronRight,
   Wallet,
   TrendingUp,
-  TrendingDown,
   Target,
   UtensilsCrossed,
   ShoppingBag,
@@ -16,10 +16,17 @@ import {
   HeartPulse,
   BookOpen,
   PiggyBank,
+  ArrowUpCircle,
+  ArrowDownCircle,
+  Plus,
+  Minus,
+  ArrowLeftRight,
 } from "lucide-react";
 import { toast } from "sonner";
 import { getDashboardSummary } from "../lib/api/dashboard";
 import { ApiCategory, ApiTransaction, getCategories } from "../lib/api/transactions";
+import { formatLunarLabel } from "../lib/lunar";
+import { useLocale } from "../lib/locale";
 
 type UiTransaction = {
   id: string;
@@ -64,6 +71,7 @@ function mapApiTransaction(item: ApiTransaction): UiTransaction {
 
 export function Dashboard() {
   const navigate = useNavigate();
+  const { locale } = useLocale();
 
   const today = new Date();
   const [currentMonth, setCurrentMonth] = useState(today.toISOString().slice(0, 7));
@@ -100,19 +108,21 @@ export function Dashboard() {
 
   const monthLabel = useMemo(() => {
     const [year, month] = currentMonth.split("-").map(Number);
-    return new Date(year, month - 1, 1).toLocaleDateString("vi-VN", {
+    const loc = locale === "en" ? "en-US" : "vi-VN";
+    return new Date(year, month - 1, 1).toLocaleDateString(loc, {
       month: "long",
       year: "numeric",
     });
-  }, [currentMonth]);
+  }, [currentMonth, locale]);
 
   const selectedDateLabel = useMemo(() => {
-    return new Date(selectedDate).toLocaleDateString("vi-VN", {
+    const loc = locale === "en" ? "en-US" : "vi-VN";
+    return new Date(selectedDate).toLocaleDateString(loc, {
       weekday: "long",
       day: "numeric",
       month: "long",
     });
-  }, [selectedDate]);
+  }, [selectedDate, locale]);
 
   const loadCategories = async () => {
     try {
@@ -229,61 +239,134 @@ export function Dashboard() {
     }
   };
 
-  const calendarDays = useMemo(() => {
-    return expenseCalendarDays.slice(0, 14);
+  const shortCurrency = (amount: number) => {
+    const value = Number.isFinite(amount) ? amount : 0;
+    const sign = value > 0 ? "+" : "";
+    return `${sign}${new Intl.NumberFormat("vi-VN").format(value)} đ`;
+  };
+
+  const netFlow = summary.income - summary.expense;
+
+  const goToPreviousMonth = () => {
+    const [year, month] = currentMonth.split("-").map(Number);
+    const previous = new Date(year, month - 2, 1);
+    const next = previous.toISOString().slice(0, 7);
+    setCurrentMonth(next);
+    setSelectedDate(`${next}-01`);
+  };
+
+  const goToNextMonth = () => {
+    const [year, month] = currentMonth.split("-").map(Number);
+    const next = new Date(year, month, 1);
+    const value = next.toISOString().slice(0, 7);
+    setCurrentMonth(value);
+    setSelectedDate(`${value}-01`);
+  };
+
+  const yearLabel = useMemo(() => {
+    const [year] = currentMonth.split("-").map(Number);
+    return `Năm ${year}`;
+  }, [currentMonth]);
+
+  type CalendarCell = {
+    date: string;
+    day: number;
+    solarLabel: string;
+    lunarLabel: string;
+    inCurrentMonth: boolean;
+    expense: number;
+  };
+
+  const expenseByDate = useMemo(() => {
+    const map = new Map<string, number>();
+    expenseCalendarDays.forEach((day) => map.set(day.date, day.expense));
+    return map;
   }, [expenseCalendarDays]);
+
+  const calendarCells = useMemo<CalendarCell[]>(() => {
+    const [year, month] = currentMonth.split("-").map(Number);
+    const firstOfMonth = new Date(year, month - 1, 1);
+    const jsDay = firstOfMonth.getDay();
+    const leading = jsDay === 0 ? 6 : jsDay - 1;
+
+    const cells: CalendarCell[] = [];
+    const start = new Date(year, month - 1, 1 - leading);
+
+    for (let i = 0; i < 42; i += 1) {
+      const current = new Date(start);
+      current.setDate(start.getDate() + i);
+      const iso = `${current.getFullYear()}-${String(current.getMonth() + 1).padStart(2, "0")}-${String(current.getDate()).padStart(2, "0")}`;
+
+      cells.push({
+        date: iso,
+        day: current.getDate(),
+        solarLabel: String(current.getDate()),
+        lunarLabel: formatLunarLabel(current),
+        inCurrentMonth: current.getMonth() === month - 1,
+        expense: expenseByDate.get(iso) ?? 0,
+      });
+    }
+
+    const lastInMonth = cells.findIndex(
+      (cell, idx) => idx >= 35 && cell.inCurrentMonth,
+    );
+    if (lastInMonth === -1 && cells.slice(35).every((cell) => !cell.inCurrentMonth)) {
+      return cells.slice(0, 35);
+    }
+
+    return cells;
+  }, [currentMonth, expenseByDate]);
+
+  const handleQuickAdd = (type: "income" | "expense") => {
+    navigate(`/transactions?add=1&type=${type}`);
+  };
+
+  const handleTransfer = () => {
+    toast.info("Tính năng chuyển khoản đang được phát triển");
+  };
 
   return (
     <div className="max-w-md mx-auto min-h-screen pb-6">
-      <div className="bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 text-slate-100 p-6 border-b border-slate-800">
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <p className="text-sm text-slate-300">Tổng quan</p>
-            <h1 className="text-2xl font-semibold capitalize">{monthLabel}</h1>
+      <div className="px-4 pt-3 space-y-3">
+        <p className="text-center text-xs text-muted-foreground capitalize">{monthLabel}</p>
+        <Card className="px-4 py-3 bg-card border border-border text-card-foreground">
+          <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1.5 text-sm">
+            <span className="flex items-center gap-1.5">
+              <Wallet className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+              <span className="text-muted-foreground">Số dư:</span>
+              <span className="font-semibold text-emerald-600 dark:text-emerald-400">
+                {isLoading ? "…" : shortCurrency(summary.balance)}
+              </span>
+            </span>
+            <span className="flex items-center gap-1.5">
+              <TrendingUp className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+              <span className="text-muted-foreground">Dòng tiền:</span>
+              <span
+                className={`font-semibold ${
+                  netFlow >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-destructive"
+                }`}
+              >
+                {isLoading ? "…" : shortCurrency(netFlow)}
+              </span>
+            </span>
           </div>
-
-          <input
-            type="month"
-            value={currentMonth}
-            onChange={(e) => {
-              setCurrentMonth(e.target.value);
-              setSelectedDate(`${e.target.value}-01`);
-            }}
-            className="rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100"
-          />
-        </div>
-
-        <div className="grid grid-cols-3 gap-3">
-          <Card className="p-4 bg-slate-900/70 border-slate-700">
-            <div className="flex items-center gap-2 mb-2">
-              <Wallet className="w-4 h-4 text-cyan-300" />
-              <p className="text-xs text-slate-300">Số dư</p>
-            </div>
-            <p className="text-sm text-slate-100">
-              {isLoading ? "..." : formatCurrency(summary.balance)}
-            </p>
-          </Card>
-
-          <Card className="p-4 bg-slate-900/70 border-slate-700">
-            <div className="flex items-center gap-2 mb-2">
-              <TrendingUp className="w-4 h-4 text-emerald-300" />
-              <p className="text-xs text-slate-300">Thu</p>
-            </div>
-            <p className="text-sm text-emerald-300">
-              {isLoading ? "..." : formatCurrency(summary.income)}
-            </p>
-          </Card>
-
-          <Card className="p-4 bg-slate-900/70 border-slate-700">
-            <div className="flex items-center gap-2 mb-2">
-              <TrendingDown className="w-4 h-4 text-rose-300" />
-              <p className="text-xs text-slate-300">Chi</p>
-            </div>
-            <p className="text-sm text-rose-300">
-              {isLoading ? "..." : formatCurrency(summary.expense)}
-            </p>
-          </Card>
-        </div>
+          <div className="mt-2 flex flex-wrap items-center justify-center gap-x-6 gap-y-1.5 text-sm">
+            <span className="flex items-center gap-1.5">
+              <ArrowUpCircle className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+              <span className="text-muted-foreground">Thu:</span>
+              <span className="font-semibold text-emerald-600 dark:text-emerald-400">
+                {isLoading ? "…" : shortCurrency(summary.income)}
+              </span>
+            </span>
+            <span className="flex items-center gap-1.5">
+              <ArrowDownCircle className="w-4 h-4 text-destructive shrink-0" />
+              <span className="text-muted-foreground">Chi:</span>
+              <span className="font-semibold text-destructive">
+                {isLoading ? "…" : shortCurrency(summary.expense)}
+              </span>
+            </span>
+          </div>
+        </Card>
       </div>
 
       <div className="px-4 mt-6 space-y-6">
@@ -359,41 +442,124 @@ export function Dashboard() {
           </div>
         </Card>
 
+        <div className="grid grid-cols-3 gap-3">
+          <button
+            type="button"
+            onClick={() => handleQuickAdd("expense")}
+            className="rounded-2xl border border-rose-500/40 bg-rose-500/10 hover:bg-rose-500/20 transition-colors py-5 flex flex-col items-center justify-center gap-2 text-rose-300"
+          >
+            <span className="w-9 h-9 rounded-full border border-rose-400/60 flex items-center justify-center">
+              <Minus className="w-5 h-5" strokeWidth={2.2} />
+            </span>
+            <span className="text-base font-semibold">Chi</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => handleQuickAdd("income")}
+            className="rounded-2xl border border-emerald-500/40 bg-emerald-500/10 hover:bg-emerald-500/20 transition-colors py-5 flex flex-col items-center justify-center gap-2 text-emerald-300"
+          >
+            <span className="w-9 h-9 rounded-full border border-emerald-400/60 flex items-center justify-center">
+              <Plus className="w-5 h-5" strokeWidth={2.2} />
+            </span>
+            <span className="text-base font-semibold">Thu</span>
+          </button>
+          <button
+            type="button"
+            onClick={handleTransfer}
+            className="rounded-2xl border border-primary/40 bg-primary/10 hover:bg-primary/20 transition-colors py-5 flex flex-col items-center justify-center gap-2 text-primary"
+          >
+            <span className="w-9 h-9 rounded-full border border-primary/50 flex items-center justify-center">
+              <ArrowLeftRight className="w-5 h-5" strokeWidth={2.2} />
+            </span>
+            <span className="text-base font-semibold">Chuyển</span>
+          </button>
+        </div>
+
         <Card className="p-5 bg-slate-900 border-slate-800">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <p className="text-base font-semibold text-slate-100">Chi tiêu theo ngày</p>
-              <p className="text-sm text-slate-400 mt-1 capitalize">{selectedDateLabel}</p>
+          <p className="text-base font-semibold text-slate-100 mb-4">Lịch giao dịch</p>
+
+          <div className="flex items-center justify-between mb-3">
+            <button
+              type="button"
+              onClick={goToPreviousMonth}
+              className="w-10 h-10 rounded-full border border-slate-700 bg-slate-950/60 flex items-center justify-center text-slate-200 hover:bg-slate-900"
+              aria-label="Tháng trước"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+            <div className="text-center">
+              <p className="text-base font-semibold capitalize">{monthLabel}</p>
+              <p className="text-xs text-slate-400 mt-0.5">{yearLabel}</p>
             </div>
+            <button
+              type="button"
+              onClick={goToNextMonth}
+              className="w-10 h-10 rounded-full border border-slate-700 bg-slate-950/60 flex items-center justify-center text-slate-200 hover:bg-slate-900"
+              aria-label="Tháng sau"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
           </div>
 
-          <div className="grid grid-cols-7 gap-2 mb-4">
-            {calendarDays.map((day) => {
-              const isSelected = day.date === selectedDate;
-              const dayNumber = Number(day.date.slice(-2));
+          <div className="grid grid-cols-7 mb-1">
+            {["T2", "T3", "T4", "T5", "T6", "T7", "CN"].map((label) => (
+              <div key={label} className="text-center text-xs text-slate-400 py-2">
+                {label}
+              </div>
+            ))}
+          </div>
+
+          <div className="grid grid-cols-7 gap-y-1">
+            {calendarCells.map((cell) => {
+              const isSelected = cell.date === selectedDate;
+              const isDim = !cell.inCurrentMonth;
+              const lunarIsMonthMark = cell.lunarLabel.startsWith("T");
 
               return (
                 <button
-                  key={day.date}
+                  key={cell.date}
                   type="button"
-                  onClick={() => setSelectedDate(day.date)}
-                  className={`rounded-xl border p-2 text-center ${
+                  onClick={() => setSelectedDate(cell.date)}
+                  className={`flex flex-col items-center justify-center py-2 rounded-xl transition-colors ${
                     isSelected
-                      ? "bg-cyan-500/20 border-cyan-400 text-cyan-100"
-                      : "bg-slate-950 border-slate-800 text-slate-100"
+                      ? "bg-emerald-500/20 border border-emerald-400 text-emerald-100"
+                      : "border border-transparent hover:bg-slate-800/60"
                   }`}
                 >
-                  <p className="text-xs">{dayNumber}</p>
-                  <p className="text-[10px] text-rose-300 mt-1">
-                    {day.expense > 0 ? `${Math.round(day.expense / 1000)}k` : "•"}
-                  </p>
+                  <span
+                    className={`text-lg leading-none ${
+                      isSelected
+                        ? "font-semibold text-emerald-100"
+                        : isDim
+                          ? "text-slate-600"
+                          : "text-slate-100"
+                    }`}
+                  >
+                    {cell.solarLabel}
+                  </span>
+                  <span
+                    className={`mt-1 text-[10px] leading-none ${
+                      isDim
+                        ? "text-slate-700"
+                        : lunarIsMonthMark
+                          ? "text-emerald-300 font-medium"
+                          : "text-slate-500"
+                    }`}
+                  >
+                    {cell.lunarLabel}
+                  </span>
                 </button>
               );
             })}
           </div>
+        </Card>
 
-          <div className="rounded-xl border border-slate-800 bg-slate-950/60 p-3 mb-4">
-            <p className="text-xs text-slate-400 mb-1">Chi tiêu ngày đã chọn</p>
+        <Card className="p-5 bg-slate-900 border-slate-800">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <p className="text-base font-semibold text-slate-100">Chi tiêu ngày đã chọn</p>
+              <p className="text-sm text-slate-400 mt-1 capitalize">{selectedDateLabel}</p>
+            </div>
             <p className="text-sm text-rose-300">{formatCurrency(selectedDayExpense)}</p>
           </div>
 

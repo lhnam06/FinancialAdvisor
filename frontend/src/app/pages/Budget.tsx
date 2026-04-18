@@ -1,5 +1,4 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router";
 import { Card } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
@@ -7,7 +6,6 @@ import { Label } from "../components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
 import {
-  ChevronLeft,
   Plus,
   Edit,
   Trash2,
@@ -21,6 +19,7 @@ import {
   BookOpen,
   Wallet,
   TrendingUp,
+  Lightbulb,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Progress } from "../components/ui/progress";
@@ -60,8 +59,6 @@ function mapApiBudget(item: ApiBudget): UiBudget {
 }
 
 export function Budget() {
-  const navigate = useNavigate();
-
   const [budgets, setBudgets] = useState<UiBudget[]>([]);
   const [categories, setCategories] = useState<ApiCategory[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -215,36 +212,24 @@ export function Budget() {
 
   return (
     <div className="max-w-md mx-auto min-h-screen pb-6">
-      <div className="bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 text-slate-100 p-6 border-b border-slate-800">
-        <div className="flex items-center gap-3 mb-6">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-11 w-11 text-white hover:bg-white/20"
-            onClick={() => navigate("/")}
-          >
-            <ChevronLeft className="w-6 h-6" />
-          </Button>
-          <h1 className="text-2xl font-semibold">Ngân sách</h1>
-        </div>
-
-        <Card className="bg-slate-900/70 backdrop-blur-sm border-slate-700 p-5">
-          <p className="text-base text-slate-200 mb-1">Tổng ngân sách tháng này</p>
+      <div className="px-4 pt-3 pb-4 text-foreground border-b border-border">
+        <Card className="p-5 bg-card border border-border text-card-foreground">
+          <p className="text-base text-muted-foreground mb-1">Tổng ngân sách tháng này</p>
           <div className="flex items-baseline gap-2 mb-4">
-            <p className="text-2xl text-cyan-300">{formatCurrency(totalSpent)}</p>
-            <p className="text-base text-slate-300">/ {formatCurrency(totalBudget)}</p>
+            <p className="text-2xl text-primary">{formatCurrency(totalSpent)}</p>
+            <p className="text-base text-muted-foreground">/ {formatCurrency(totalBudget)}</p>
           </div>
-          <Progress value={Math.min(overallPercentage, 100)} className="h-3 bg-slate-800 [&>div]:bg-cyan-400" />
-          <p className="text-sm text-slate-300 mt-3">
+          <Progress value={Math.min(overallPercentage, 100)} className="h-3 bg-muted [&>div]:bg-primary" />
+          <p className="text-sm text-muted-foreground mt-3">
             Còn lại: {formatCurrency(Math.max(totalBudget - totalSpent, 0))}
           </p>
         </Card>
       </div>
 
       <div className="px-4 mt-6 space-y-4">
-        <div className="sticky top-0 z-20 -mx-4 px-4 py-3 bg-slate-950/90 backdrop-blur-md border-b border-slate-800/80">
+        <div className="sticky top-0 z-20 -mx-4 px-4 py-3 bg-background/90 backdrop-blur-md border-b border-border">
           <div className="flex items-center justify-between">
-            <h2 className="text-xl font-semibold text-slate-100">Danh mục ngân sách</h2>
+            <h2 className="text-xl font-semibold text-foreground">Danh mục ngân sách</h2>
             <Button
               variant="outline"
               onClick={() => {
@@ -334,9 +319,10 @@ export function Budget() {
                 </div>
 
                 {isOverBudget && (
-                  <div className="mt-3 p-2 bg-rose-900/20 border border-rose-700/30 rounded-lg">
-                    <p className="text-sm text-rose-200">
-                      ⚠️ Đã vượt ngân sách {formatCurrency(Math.abs(budget.remaining))}
+                  <div className="mt-3 p-2 rounded-lg border border-destructive/30 bg-destructive/10">
+                    <p className="text-sm text-destructive flex items-center gap-2">
+                      <AlertTriangle className="w-4 h-4 shrink-0" />
+                      <span>Đã vượt ngân sách {formatCurrency(Math.abs(budget.remaining))}</span>
                     </p>
                   </div>
                 )}
@@ -353,9 +339,12 @@ export function Budget() {
       </div>
 
       <div className="px-4 mt-6">
-        <Card className="p-4 bg-slate-900 border-slate-800">
-          <h3 className="text-base font-semibold mb-2 text-cyan-300">💡 Mẹo quản lý ngân sách</h3>
-          <ul className="text-sm text-slate-200 space-y-2">
+        <Card className="p-4 bg-card border border-border">
+          <h3 className="text-base font-semibold mb-2 text-foreground flex items-center gap-2">
+            <Lightbulb className="w-4 h-4 text-primary shrink-0" />
+            Mẹo quản lý ngân sách
+          </h3>
+          <ul className="text-sm text-muted-foreground space-y-2">
             <li>• Áp dụng quy tắc 50/30/20: 50% nhu cầu, 30% mong muốn, 20% tiết kiệm</li>
             <li>• Theo dõi chi tiêu hàng ngày để kiểm soát ngân sách</li>
             <li>• Đặt cảnh báo khi đạt 80% ngân sách</li>
