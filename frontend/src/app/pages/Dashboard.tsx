@@ -47,11 +47,15 @@ type ExpenseCalendarDay = {
   transactionCount: number;
 };
 
+function normalizeTransactionType(value: unknown): "income" | "expense" {
+  return String(value).toLowerCase() === "income" ? "income" : "expense";
+}
+
 function mapApiTransaction(item: ApiTransaction): UiTransaction {
   return {
     id: item.id,
-    type: item.type,
-    amount: item.amount_minor,
+    type: normalizeTransactionType(item.type),
+    amount: Number(item.amount_minor ?? 0),
     category: item.category.name,
     description: item.description,
     date: item.transaction_date,
@@ -91,7 +95,7 @@ export function Dashboard() {
     return new Intl.NumberFormat("vi-VN", {
       style: "currency",
       currency: "VND",
-    }).format(amount);
+    }).format(Number.isFinite(amount) ? amount : 0);
   };
 
   const monthLabel = useMemo(() => {
@@ -128,28 +132,28 @@ export function Dashboard() {
       const response = await getDashboardSummary(month, date);
 
       setSummary({
-        balance: response.summary.balance_minor,
-        income: response.summary.income_minor,
-        expense: response.summary.expense_minor,
+        balance: Number(response.summary.balance_minor ?? 0),
+        income: Number(response.summary.income_minor ?? 0),
+        expense: Number(response.summary.expense_minor ?? 0),
       });
 
       setBudgetSummary({
-        totalLimit: response.budget_summary.total_limit_minor,
-        totalSpent: response.budget_summary.total_spent_minor,
-        usagePercent: response.budget_summary.usage_percent,
-        statusText: response.budget_summary.status_text,
+        totalLimit: Number(response.budget_summary.total_limit_minor ?? 0),
+        totalSpent: Number(response.budget_summary.total_spent_minor ?? 0),
+        usagePercent: Number(response.budget_summary.usage_percent ?? 0),
+        statusText: response.budget_summary.status_text ?? "",
       });
 
       setGoalsPreview(
         response.goals_preview.map((goal) => ({
           id: goal.id,
           name: goal.name,
-          targetAmount: goal.target_minor,
-          currentAmount: goal.current_minor,
-          progressPercent: goal.progress_percent,
+          targetAmount: Number(goal.target_minor ?? 0),
+          currentAmount: Number(goal.current_minor ?? 0),
+          progressPercent: Number(goal.progress_percent ?? 0),
           icon: goal.icon_key,
           deadline: goal.deadline,
-          isCompleted: goal.is_completed,
+          isCompleted: Boolean(goal.is_completed),
         })),
       );
 
@@ -158,13 +162,24 @@ export function Dashboard() {
       setExpenseCalendarDays(
         response.expense_calendar.days.map((day) => ({
           date: day.date,
-          expense: day.expense_minor,
-          transactionCount: day.transaction_count,
+          expense: Number(day.expense_minor ?? 0),
+          transactionCount: Number(day.transaction_count ?? 0),
         })),
       );
 
-      setSelectedDayExpense(response.selected_day.total_expense_minor);
-      setSelectedDayTransactions(response.selected_day.items.map(mapApiTransaction));
+      const mappedSelectedDayTransactions = (response.selected_day?.items ?? []).map(mapApiTransaction);
+
+      const selectedDayExpenseFromItems = mappedSelectedDayTransactions.reduce((sum, item) => {
+        return item.type === "expense" ? sum + item.amount : sum;
+      }, 0);
+
+      const selectedDayExpenseFromResponse = Number(response.selected_day?.total_expense_minor ?? 0);
+
+      const selectedDayExpenseValue =
+        selectedDayExpenseFromItems > 0 ? selectedDayExpenseFromItems : selectedDayExpenseFromResponse;
+
+      setSelectedDayTransactions(mappedSelectedDayTransactions);
+      setSelectedDayExpense(selectedDayExpenseValue);
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Không tải được dữ liệu dashboard");
     } finally {
