@@ -160,7 +160,7 @@ FinancialAdvisor/
 - Docker Compose (for local database)
 - Pydantic / Pydantic Settings
 
----
+--
 
 ## 4) Run the Project
 
